@@ -13,3 +13,8 @@ C:\Users\Yanire\Documents\GitHub\barabares\Servicios\BARABARES_Services\BARABARE
 C:\Users\Yanire\Documents\GitHub\barabares\Servicios\BARABARES_Services\BARABARES_Services\obj\Debug\BARABARES_Services.dll
 C:\Users\Yanire\Documents\GitHub\barabares\Servicios\BARABARES_Services\BARABARES_Services\obj\Debug\BARABARES_Services.pdb
 C:\Users\Yanire\Documents\GitHub\barabares\Servicios\BARABARES_Services\BARABARES_Services\obj\Debug\BARABARES_Services.csprojResolveAssemblyReference.cache
+C:\Users\Yanire\Documents\GitHub\servicios\BARABARES_Services\BARABARES_Services\bin\BARABARES_Services.dll
+C:\Users\Yanire\Documents\GitHub\servicios\BARABARES_Services\BARABARES_Services\bin\BARABARES_Services.pdb
+C:\Users\Yanire\Documents\GitHub\servicios\BARABARES_Services\BARABARES_Services\obj\Debug\BARABARES_Services.csprojResolveAssemblyReference.cache
+C:\Users\Yanire\Documents\GitHub\servicios\BARABARES_Services\BARABARES_Services\obj\Debug\BARABARES_Services.dll
+C:\Users\Yanire\Documents\GitHub\servicios\BARABARES_Services\BARABARES_Services\obj\Debug\BARABARES_Services.pdb
