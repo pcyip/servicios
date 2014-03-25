@@ -1,1 +1,0 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="BARABARES_Services.Contrasena_Services" CodeBehind="Contrasena_Services.svc.cs" %>

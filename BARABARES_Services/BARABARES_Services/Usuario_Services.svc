@@ -1,1 +1,0 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="BARABARES_Services.Usuario_Services" CodeBehind="Usuario_Services.svc.cs" %>
