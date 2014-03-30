@@ -21,14 +21,25 @@ namespace BARABARES_Services
 
         public ResponseBD add_Parametro(Parametro p)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("PARAMETRO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -36,7 +47,7 @@ namespace BARABARES_Services
                     {
                         Direction = ParameterDirection.Output,
                         Size = 10
-                        
+
                     };
 
                     SqlParameter mensaje = new SqlParameter("@opsMsj", SqlDbType.VarChar)
@@ -67,28 +78,56 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Parametro,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (p == null) ? "null" : p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         public List<Parametro> selectAll_Parametro()
         {
-            List<Parametro> parametros = new List<Parametro>();
-            Parametro p = new Parametro();
-
             try
             {
+                List<Parametro> parametros = new List<Parametro>();
+                Parametro p = new Parametro();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("PARAMETRO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -103,37 +142,64 @@ namespace BARABARES_Services
                     sda.Dispose();
                 }
 
-                DataRow[]  rows = dt.Select();
-                
+                DataRow[] rows = dt.Select();
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     p = Utils.parametro_parse(rows[i]);
                     parametros.Add(p);
                 }
 
+
+                return parametros;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Parametro p = new Parametro();
 
-            return parametros;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Parametro,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Parametro>();
+            }
 
         }
 
         public List<Parametro> selectByPadre_Parametro(int id)
         {
-            List<Parametro> parametros = new List<Parametro>();
-            Parametro p = new Parametro();
-
             try
             {
+                List<Parametro> parametros = new List<Parametro>();
+                Parametro p = new Parametro();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("PARAMETRO_SELECT_BY_PADRE", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -157,14 +223,30 @@ namespace BARABARES_Services
                     parametros.Add(p);
                 }
 
+                return parametros;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                Parametro p = new Parametro();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectByPadre_Parametro,
+                    Input = JsonSerializer.selectByPadre_Parametro(id),
+                    Descripcion = ex.ToString(),
+                    Clase = p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Parametro>();
             }
-
-            return parametros;
-
         }
 
         #endregion
@@ -173,17 +255,26 @@ namespace BARABARES_Services
 
         public List<ParametrosSeguridad> selectAll_ParametrosSeguridad()
         {
-            List<ParametrosSeguridad> parametros = new List<ParametrosSeguridad>();
-            ParametrosSeguridad p = new ParametrosSeguridad();
-
             try
             {
+                List<ParametrosSeguridad> parametros = new List<ParametrosSeguridad>();
+                ParametrosSeguridad p = new ParametrosSeguridad();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("PARAMETRO_SEGURIDAD_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -199,33 +290,61 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     p = Utils.parametroSeguridad_parse(rows[i]);
                     parametros.Add(p);
                 }
 
+                return parametros;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                ParametrosSeguridad p = new ParametrosSeguridad();
 
-            return parametros;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_ParametrosSeguridad,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<ParametrosSeguridad>();
+            }
 
         }
 
         public ResponseBD add_ParametrosSeguridad(ParametrosSeguridad p)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("PARAMETRO_SEGURIDAD_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -263,13 +382,33 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_ParametrosSeguridad,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (p == null) ? "null" : p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion

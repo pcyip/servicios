@@ -21,17 +21,25 @@ namespace BARABARES_Services
 
         public List<Almacen> selectAll_Almacen()
         {
-            List<Almacen> almacenes = new List<Almacen>();
-            Almacen a;
-
             try
             {
+                List<Almacen> almacenes = new List<Almacen>();
+                Almacen a = new Almacen();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return almacenes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("ALMACEN_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -39,39 +47,69 @@ namespace BARABARES_Services
                     SqlConn.Close();
                     sqlCmd.Dispose();
                     sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        a = Utils.almacen_parse(rows[i]);
+                        almacenes.Add(a);
+                    }
+
+
                 }
 
-                DataRow[] rows = dt.Select();
-                
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    a = Utils.almacen_parse(rows[i]);
-                    almacenes.Add(a);
-                }
+                return almacenes;
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Almacen a = new Almacen();
 
-            return almacenes;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Almacen,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Almacen>();
+            }
 
         }
 
         public List<Select.Almacen> list_Almacen()
         {
-            List<Select.Almacen> almacenes = new List<Select.Almacen>();
-            Select.Almacen a = new Select.Almacen();
-
             try
             {
+                List<Select.Almacen> almacenes = new List<Select.Almacen>();
+                Select.Almacen a = new Select.Almacen();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return almacenes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("ALMACEN_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -84,39 +122,66 @@ namespace BARABARES_Services
                     SqlConn.Close();
                     sqlCmd.Dispose();
                     sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        a = Utils.select_almacen_parse(rows[i]);
+                        almacenes.Add(a);
+                    }
+
+
                 }
-
-                DataRow[] rows = dt.Select();
-
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    a = Utils.select_almacen_parse(rows[i]);
-                    almacenes.Add(a);
-                }
-
+                return almacenes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                Select.Almacen a = new Select.Almacen();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_Almacen,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Almacen>();
             }
-
-            return almacenes;
-
         }
 
         public List<Select.Almacen> search_Almacen(Search.Almacen alm)
         {
-            List<Select.Almacen> almacenes = new List<Select.Almacen>();
-            Select.Almacen a;
-
             try
             {
+                List<Select.Almacen> almacenes = new List<Select.Almacen>();
+                Select.Almacen a = new Select.Almacen();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return almacenes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("ALMACEN_SEARCH", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -138,36 +203,64 @@ namespace BARABARES_Services
                     SqlConn.Close();
                     sqlCmd.Dispose();
                     sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        a = Utils.select_almacen_parse(rows[i]);
+                        almacenes.Add(a);
+                    }
+
+
+                    return almacenes;
                 }
-
-                DataRow[] rows = dt.Select();
-
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    a = Utils.select_almacen_parse(rows[i]);
-                    almacenes.Add(a);
-                }
-
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                Select.Almacen a = new Select.Almacen();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_Almacen,
+                    Input = JsonSerializer.search_Almacen(alm),
+                    Descripcion = ex.ToString(),
+                    Clase = a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Almacen>();
             }
-
-            return almacenes;
-
         }
 
         public ResponseBD add_Almacen(Almacen a)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("ALMACEN_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -205,30 +298,55 @@ namespace BARABARES_Services
                     response.Mensaje = mensaje.Value.ToString();
 
                     SqlConn.Close();
-
                 }
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Almacen,
+                    Input = JsonSerializer.add_Almacen(a),
+                    Descripcion = ex.ToString(),
+                    Clase = (a == null) ? "null" : a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         public List<Select.InventarioAlmacen> list_InventarioAlmacen()
         {
-            List<Select.InventarioAlmacen> almacenes = new List<Select.InventarioAlmacen>();
-            Select.InventarioAlmacen a;
-
             try
             {
+                List<Select.InventarioAlmacen> almacenes = new List<Select.InventarioAlmacen>();
+                Select.InventarioAlmacen a = new Select.InventarioAlmacen();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return almacenes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("PRODUCTO_X_ALMACEN_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -236,23 +354,40 @@ namespace BARABARES_Services
                     SqlConn.Close();
                     sqlCmd.Dispose();
                     sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        a = Utils.select_inventario_almacen_parse(rows[i]);
+                        almacenes.Add(a);
+                    }
                 }
 
-                DataRow[] rows = dt.Select();
-
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    a = Utils.select_inventario_almacen_parse(rows[i]);
-                    almacenes.Add(a);
-                }
-
+                return almacenes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.InventarioAlmacen a = new Select.InventarioAlmacen();
 
-            return almacenes;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_InventarioAlmacen,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+                return new List<Select.InventarioAlmacen>();
+            }
 
         }
 

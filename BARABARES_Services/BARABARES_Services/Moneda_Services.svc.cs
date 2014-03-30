@@ -21,17 +21,26 @@ namespace BARABARES_Services
 
         public List<Moneda> selectAll_Moneda()
         {
-            List<Moneda> moneda = new List<Moneda>();
-            Moneda m = new Moneda();
-
             try
             {
+                List<Moneda> moneda = new List<Moneda>();
+                Moneda m = new Moneda();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return moneda;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("MONEDA_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -47,33 +56,61 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     m = Utils.moneda_parse(rows[i]);
                     moneda.Add(m);
                 }
 
+                return moneda;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Moneda m = new Moneda();
 
-            return moneda;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Moneda,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Moneda>();
+            }
 
         }
 
         public ResponseBD add_Moneda(Moneda m)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("MONEDA_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -109,13 +146,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Moneda,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (m == null) ? "null" : m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion

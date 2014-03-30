@@ -21,17 +21,26 @@ namespace BARABARES_Services
 
         public List<Usuario> selectAll_Usuario()
         {
-            List<Usuario> usuarios = new List<Usuario>();
-            Usuario u;
-
             try
             {
+                List<Usuario> usuarios = new List<Usuario>();
+                Usuario u;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return usuarios;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -49,29 +58,55 @@ namespace BARABARES_Services
                     usuarios.Add(u);
                 }
 
+                return usuarios;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Usuario d = new Usuario();
 
-            return usuarios;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Usuario,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Usuario>();
+            }
 
         }
 
         public List<Select.Usuario> list_Usuario()
         {
-            List<Select.Usuario> usuarios = new List<Select.Usuario>();
-            Select.Usuario u = new Select.Usuario();
-
             try
             {
+                List<Select.Usuario> usuarios = new List<Select.Usuario>();
+                Select.Usuario u = new Select.Usuario();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return usuarios;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -89,29 +124,55 @@ namespace BARABARES_Services
                     usuarios.Add(u);
                 }
 
+                return usuarios;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Usuario d = new Select.Usuario();
 
-            return usuarios;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_Usuario,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Usuario>();
+            }
 
         }
 
         public List<Select.Usuario> search_Usuario(Search.Usuario usu)
         {
-            List<Select.Usuario> usuarios = new List<Select.Usuario>();
-            Select.Usuario u;
-
             try
             {
+                List<Select.Usuario> usuarios = new List<Select.Usuario>();
+                Select.Usuario u;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return usuarios;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_SEARCH", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -135,26 +196,54 @@ namespace BARABARES_Services
                     usuarios.Add(u);
                 }
 
+                return usuarios;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Usuario d = new Select.Usuario();
 
-            return usuarios;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_Usuario,
+                    Input = JsonSerializer.search_Usuario(usu),
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Usuario>();
+            }
 
         }
 
         public ResponseBD add_Usuario(Usuario u)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -187,25 +276,42 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Usuario,
+                    Input = JsonSerializer.add_Usuario(u),
+                    Descripcion = ex.ToString(),
+                    Clase = (u == null) ? "null" : u.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-                //add_LogBarabares();
-                Debug.WriteLine(ex.ToString());
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
             }
-
-            return response;
         }
 
         public ResponseBD login_Usuario(Select.Login l)
         {
-            ResponseBD response = new ResponseBD();
-
-            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
-            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            try
             {
-                try
+                ResponseBD response = new ResponseBD();
+
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
                     try
                     {
@@ -214,11 +320,11 @@ namespace BARABARES_Services
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.ToString());
-
-                        response.Flujo = Constantes.ERROR;
+                        response.Flujo = Constantes.FALLA;
                         response.Mensaje = "Error al abrir la conexión a BD";
                         return response;
                     }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_LOGIN", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -286,36 +392,69 @@ namespace BARABARES_Services
                     }
                 }
 
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                    LogBarabares b = new LogBarabares()
-                    {
-                        Accion = Constantes.LOG_BUSCAR,
-                        Servicio = Constantes.Search_LogUsuario,
-                        Input = JsonSerializer.login_Usuario(l.usuario, l.contrasena),
-                        Descripcion = ex.ToString(),
-                        Clase = l.GetType().Name,
-                        Aplicacion = "Servicios",
-                        Estado = Constantes.FALLA,
-                        Ip = "ip",
-                        IdUsuario = 1 //TODO: obtener usuario de la sesión
-
-                    };
-
-                    Utils.add_LogBarabares(b);
-                }
+                return response;
             }
+            catch (Exception ex)
+            {
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LOGIN,
+                    Servicio = Constantes.Login_Usuario,
+                    Input = JsonSerializer.login_Usuario(l.usuario, l.contrasena),
+                    Descripcion = ex.ToString(),
+                    Clase = (l == null) ? "null" : l.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         public ResponseBD logout_Usuario(string token)
         {
-            ResponseBD response = new ResponseBD();
-            BBSessionManager.Instance.logOut(token);
+            try
+            {
+                ResponseBD response = new ResponseBD();
+                BBSessionManager.Instance.logOut(token);
 
-            return response;
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                Usuario d = new Usuario();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LOGOUT,
+                    Servicio = Constantes.Logout_Usuario,
+                    Input = token,
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
+
         }
 
         #endregion
@@ -324,17 +463,26 @@ namespace BARABARES_Services
 
         public List<LogUsuario> selectAll_LogUsuario()
         {
-            List<LogUsuario> logUsuarios = new List<LogUsuario>();
-            LogUsuario l = new LogUsuario();
-
             try
             {
+                List<LogUsuario> logUsuarios = new List<LogUsuario>();
+                LogUsuario l = new LogUsuario();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return logUsuarios;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_LOG_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -352,29 +500,55 @@ namespace BARABARES_Services
                     logUsuarios.Add(l);
                 }
 
+                return logUsuarios;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogUsuario d = new LogUsuario();
 
-            return logUsuarios;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_LogUsuario,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<LogUsuario>();
+            }
 
         }
 
         public List<Select.LogUsuario> list_LogUsuario()
         {
-            List<Select.LogUsuario> logUsuarios = new List<Select.LogUsuario>();
-            Select.LogUsuario l = new Select.LogUsuario();
-
             try
             {
+                List<Select.LogUsuario> logUsuarios = new List<Select.LogUsuario>();
+                Select.LogUsuario l = new Select.LogUsuario();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return logUsuarios;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_LOG_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -392,28 +566,44 @@ namespace BARABARES_Services
                     logUsuarios.Add(l);
                 }
 
+                return logUsuarios;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.LogUsuario d = new Select.LogUsuario();
 
-            return logUsuarios;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_LogUsuario,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.LogUsuario>();
+            }
 
         }
 
         public List<Select.LogUsuario> search_LogUsuario(Search.LogUsuario t)
         {
-            List<Select.LogUsuario> logUsuarios = new List<Select.LogUsuario>();
-            Select.LogUsuario l;
-
-
-            DataTable dt = new DataTable();
-            SqlDataAdapter sda = new SqlDataAdapter();
-            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
-            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            try
             {
-                try
+                List<Select.LogUsuario> logUsuarios = new List<Select.LogUsuario>();
+                Select.LogUsuario l;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
                     try
                     {
@@ -422,11 +612,9 @@ namespace BARABARES_Services
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.ToString());
-
-                        //TODO:guardar info del error
-
                         return logUsuarios;
                     }
+
                     SqlCommand sqlCmd = new SqlCommand("USUARIO_LOG_SEARCH", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -450,40 +638,45 @@ namespace BARABARES_Services
                         logUsuarios.Add(l);
                     }
 
-                }
-                catch (Exception ex)
-                {
-                    LogBarabares b = new LogBarabares()
-                    {
-                        Accion = Constantes.LOG_BUSCAR,
-                        Servicio = Constantes.Search_LogUsuario,
-                        Input = JsonSerializer.search_LogUsuario(t),
-                        Descripcion = ex.ToString(),
-                        Clase = t.GetType().Name,
-                        Aplicacion = "Servicios",
-                        Estado = Constantes.FALLA,
-                        IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-                    };
-
-                    Utils.add_LogBarabares(b);
                 }
+
+                return logUsuarios;
             }
+            catch (Exception ex)
+            {
+                Select.LogUsuario l = new Select.LogUsuario();
 
-            return logUsuarios;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_LogUsuario,
+                    Input = JsonSerializer.search_LogUsuario(t),
+                    Descripcion = ex.ToString(),
+                    Clase = l.GetType().Name,
+                    Aplicacion = "Servicios",
+                    Estado = Constantes.FALLA,
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.LogUsuario>();
+            }
 
         }
 
         public ResponseBD add_LogUsuario(LogUsuario u)
         {
-            ResponseBD response = new ResponseBD();
-
-
-            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
-            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            try
             {
-                try
+                ResponseBD response = new ResponseBD();
+
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
+
                     try
                     {
                         SqlConn.Open();
@@ -491,7 +684,7 @@ namespace BARABARES_Services
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.ToString());
-                        response.Flujo = Constantes.ERROR;
+                        response.Flujo = Constantes.FALLA;
                         response.Mensaje = "Error al abrir la conexión a BD";
                         return response;
                     }
@@ -527,26 +720,32 @@ namespace BARABARES_Services
 
                     SqlConn.Close();
 
-                }
-                catch (Exception ex)
-                {
-                    LogBarabares b = new LogBarabares()
-                    {
-                        Accion = Constantes.LOG_CREAR,
-                        Servicio = Constantes.Add_LogUsuario,
-                        Input = JsonSerializer.add_LogUsuario(u),
-                        Descripcion = ex.ToString(),
-                        Clase = u.GetType().Name,
-                        Aplicacion = "Servicios",
-                        Estado = Constantes.FALLA,
-                        IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-                    };
-
-                    Utils.add_LogBarabares(b);
                 }
+                return response;
             }
-            return response;
+            catch (Exception ex)
+            {
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_LogUsuario,
+                    Input = JsonSerializer.add_LogUsuario(u),
+                    Descripcion = ex.ToString(),
+                    Clase = (u == null) ? "null" : u.GetType().Name,
+                    Aplicacion = "Servicios",
+                    Estado = Constantes.FALLA,
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion
@@ -555,14 +754,25 @@ namespace BARABARES_Services
 
         public ResponseBD add_LogBarabares(LogBarabares u)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("BARABARES_LOG_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -599,13 +809,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_LogBarabares,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = (u == null) ? "null" : u.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion

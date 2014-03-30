@@ -21,17 +21,26 @@ namespace BARABARES_Services
 
         public List<Tienda> selectAll_Tienda()
         {
-            List<Tienda> tiendas = new List<Tienda>();
-            Tienda t;
-
             try
             {
+                List<Tienda> tiendas = new List<Tienda>();
+                Tienda t;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tiendas;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("TIENDA_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -42,36 +51,62 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     t = Utils.tienda_parse(rows[i]);
                     tiendas.Add(t);
                 }
 
+                return tiendas;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Tienda t = new Tienda();
 
-            return tiendas;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Tienda,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Tienda>();
+            }
 
         }
 
         public List<Select.Tienda> list_Tienda()
         {
-            List<Select.Tienda> tiendas = new List<Select.Tienda>();
-            Select.Tienda t;
-
             try
             {
+                List<Select.Tienda> tiendas = new List<Select.Tienda>();
+                Select.Tienda t;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tiendas;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("TIENDA_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -89,29 +124,55 @@ namespace BARABARES_Services
                     tiendas.Add(t);
                 }
 
+                return tiendas;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Tienda t = new Select.Tienda();
 
-            return tiendas;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_Tienda,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Tienda>();
+            }
 
         }
 
         public List<Select.Tienda> search_Tienda(Search.Tienda ti)
         {
-            List<Select.Tienda> tiendas = new List<Select.Tienda>();
-            Select.Tienda t;
-
             try
             {
+                List<Select.Tienda> tiendas = new List<Select.Tienda>();
+                Select.Tienda t;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tiendas;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("TIENDA_SEARCH", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -138,26 +199,54 @@ namespace BARABARES_Services
                     tiendas.Add(t);
                 }
 
+
+                return tiendas;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Tienda t = new Select.Tienda();
 
-            return tiendas;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_Tienda,
+                    Input = JsonSerializer.search_Tienda(ti),
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Tienda>();
+            }
 
         }
 
         public ResponseBD add_Tienda(Tienda t)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("TIENDA_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -188,13 +277,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Tienda,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (t == null) ? "null" : t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion

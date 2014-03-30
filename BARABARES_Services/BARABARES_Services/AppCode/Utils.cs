@@ -619,6 +619,17 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.Producto_Web producto_web_parse(DataRow r)
+        {
+            Select.Producto_Web p = new Select.Producto_Web();
+            p.Nombre = r["nombre"].ToString();
+            p.Imagen = r["imagen"].ToString();
+            p.Descripcion = r["presentacion"].ToString() + " " + r["idUnidadProducto"].ToString();
+            p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
+
+            return p;
+        }
+
         public static TipoProducto tipoProducto_parse(DataRow r)
         {
             TipoProducto t = new TipoProducto();

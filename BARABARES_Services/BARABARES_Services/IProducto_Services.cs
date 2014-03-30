@@ -51,6 +51,13 @@ namespace BARABARES_Services
         List<Producto> selectByTipo_Producto(int idTipo);
 
         [OperationContract]
+        [WebInvoke(Method = "GET",
+            BodyStyle = WebMessageBodyStyle.Bare,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectByTipo_Web_Producto/{idTipo}")]
+        List<Select.Producto_Web> selectByTipo_Web_Producto(string idTipo);
+
+        [OperationContract]
         [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,

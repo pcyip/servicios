@@ -21,17 +21,25 @@ namespace BARABARES_Services
 
         public List<ComprobantePago> selectAll_Comprobante()
         {
-            List<ComprobantePago> comprobantes = new List<ComprobantePago>();
-            ComprobantePago c = new ComprobantePago();
-
             try
             {
+                List<ComprobantePago> comprobantes = new List<ComprobantePago>();
+                ComprobantePago c = new ComprobantePago();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return comprobantes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_PAGO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -47,36 +55,62 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     c = Utils.comprobante_parse(rows[i]);
                     comprobantes.Add(c);
                 }
 
+
+                return comprobantes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                ComprobantePago c = new ComprobantePago();
 
-            return comprobantes;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Comprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<ComprobantePago>();
+            }
 
         }
 
         public List<Select.ComprobantePago> list_Comprobante()
         {
-            List<Select.ComprobantePago> comprobantes = new List<Select.ComprobantePago>();
-            Select.ComprobantePago c = new Select.ComprobantePago();
-
             try
             {
+                List<Select.ComprobantePago> comprobantes = new List<Select.ComprobantePago>();
+                Select.ComprobantePago c = new Select.ComprobantePago();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return comprobantes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_PAGO_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -99,29 +133,54 @@ namespace BARABARES_Services
                     comprobantes.Add(c);
                 }
 
+                return comprobantes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                ComprobantePago c = new ComprobantePago();
 
-            return comprobantes;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_Comprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.ComprobantePago>();
+            }
 
         }
 
         public List<Select.ComprobantePago> search_Comprobante(Search.ComprobantePago p)
         {
-            List<Select.ComprobantePago> comprobantes = new List<Select.ComprobantePago>();
-            Select.ComprobantePago c;
-
             try
             {
+                List<Select.ComprobantePago> comprobantes = new List<Select.ComprobantePago>();
+                Select.ComprobantePago c = new Select.ComprobantePago();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return comprobantes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_PAGO_SEARCH", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -153,73 +212,127 @@ namespace BARABARES_Services
                     comprobantes.Add(c);
                 }
 
+
+                return comprobantes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.ComprobantePago c = new Select.ComprobantePago();
 
-            return comprobantes;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_Comprobante,
+                    Input = JsonSerializer.search_ComprobantePago(p),
+                    Descripcion = ex.ToString(),
+                    Clase = c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.ComprobantePago>();
+            }
 
         }
 
         public ResponseBD add_Comprobante(ComprobantePago c)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
-                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
-                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                ResponseBD response = new ResponseBD();
+
+                try
                 {
-                    SqlConn.Open();
-                    SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_PAGO_INSERT", SqlConn);
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-
-                    SqlParameter flujo = new SqlParameter("@opsFlujo", SqlDbType.VarChar)
+                    string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                    using (SqlConnection SqlConn = new SqlConnection(ConnString))
                     {
-                        Direction = ParameterDirection.Output,
-                        Size = 10
+                        try
+                        {
+                            SqlConn.Open();
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.ToString());
+                            response.Flujo = Constantes.FALLA;
+                            response.Mensaje = "Error al abrir la conexión a BD";
+                            return response;
+                        }
+                        SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_PAGO_INSERT", SqlConn);
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
 
-                    };
+                        SqlParameter flujo = new SqlParameter("@opsFlujo", SqlDbType.VarChar)
+                        {
+                            Direction = ParameterDirection.Output,
+                            Size = 10
 
-                    SqlParameter mensaje = new SqlParameter("@opsMsj", SqlDbType.VarChar)
-                    {
-                        Direction = ParameterDirection.Output,
-                        Size = 100
-                    };
+                        };
 
-                    sqlCmd.Parameters.Add("@ipnNumeroComprobante", SqlDbType.Int).Value = c.NumeroComprobante;
-                    sqlCmd.Parameters.Add("@ipdFechaCreacion", SqlDbType.DateTime).Value = c.FechaCreacion;
-                    sqlCmd.Parameters.Add("@ipnTotal", SqlDbType.Real).Value = c.Total;
-                    sqlCmd.Parameters.Add("@ipnTransaccionPOS", SqlDbType.Int).Value = c.TransaccionPOS;
-                    sqlCmd.Parameters.Add("@ipnIdTipoComprobante", SqlDbType.Int).Value = c.IdTipoComprobante;
-                    sqlCmd.Parameters.Add("@ipnIdMoneda", SqlDbType.Int).Value = c.IdMoneda;
-                    sqlCmd.Parameters.Add("@ipnIdPedido", SqlDbType.Int).Value = c.IdPedido;
-                    sqlCmd.Parameters.Add("@ipnIdPersona", SqlDbType.Int).Value = c.IdPersona;
+                        SqlParameter mensaje = new SqlParameter("@opsMsj", SqlDbType.VarChar)
+                        {
+                            Direction = ParameterDirection.Output,
+                            Size = 100
+                        };
 
-                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_CREAR;
-                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = c.GetType().Name;
-                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
+                        sqlCmd.Parameters.Add("@ipnNumeroComprobante", SqlDbType.Int).Value = c.NumeroComprobante;
+                        sqlCmd.Parameters.Add("@ipdFechaCreacion", SqlDbType.DateTime).Value = c.FechaCreacion;
+                        sqlCmd.Parameters.Add("@ipnTotal", SqlDbType.Real).Value = c.Total;
+                        sqlCmd.Parameters.Add("@ipnTransaccionPOS", SqlDbType.Int).Value = c.TransaccionPOS;
+                        sqlCmd.Parameters.Add("@ipnIdTipoComprobante", SqlDbType.Int).Value = c.IdTipoComprobante;
+                        sqlCmd.Parameters.Add("@ipnIdMoneda", SqlDbType.Int).Value = c.IdMoneda;
+                        sqlCmd.Parameters.Add("@ipnIdPedido", SqlDbType.Int).Value = c.IdPedido;
+                        sqlCmd.Parameters.Add("@ipnIdPersona", SqlDbType.Int).Value = c.IdPersona;
 
-                    sqlCmd.Parameters.Add(flujo);
-                    sqlCmd.Parameters.Add(mensaje);
+                        sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_CREAR;
+                        sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = c.GetType().Name;
+                        sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
 
-                    sqlCmd.ExecuteNonQuery();
+                        sqlCmd.Parameters.Add(flujo);
+                        sqlCmd.Parameters.Add(mensaje);
 
-                    response.Flujo = flujo.Value.ToString();
-                    response.Mensaje = mensaje.Value.ToString();
+                        sqlCmd.ExecuteNonQuery();
 
-                    SqlConn.Close();
+                        response.Flujo = flujo.Value.ToString();
+                        response.Mensaje = mensaje.Value.ToString();
 
+                        SqlConn.Close();
+
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Comprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (c == null) ? "null" : c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion
@@ -229,17 +342,25 @@ namespace BARABARES_Services
 
         public List<DetalleComprobante> selectAll_DetalleComprobante()
         {
-            List<DetalleComprobante> detalleComprobantes = new List<DetalleComprobante>();
-            DetalleComprobante d;
-
             try
             {
+                List<DetalleComprobante> detalleComprobantes = new List<DetalleComprobante>();
+                DetalleComprobante d = new DetalleComprobante();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return detalleComprobantes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_DETALLE_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -250,33 +371,60 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     d = Utils.detalleComprobante_parse(rows[i]);
                     detalleComprobantes.Add(d);
                 }
 
+
+                return detalleComprobantes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                DetalleComprobante d = new DetalleComprobante();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_DetalleComprobante,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<DetalleComprobante>();
             }
-
-            return detalleComprobantes;
-
         }
 
         public ResponseBD add_DetalleComprobante(DetalleComprobante d)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_DETALLE_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -314,13 +462,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_DetalleComprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (d == null) ? "null" : d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion
@@ -329,17 +496,25 @@ namespace BARABARES_Services
 
         public List<MedioPago> selectAll_MedioPago()
         {
-            List<MedioPago> mediopagos = new List<MedioPago>();
-            MedioPago m = new MedioPago();
-
             try
             {
+                List<MedioPago> mediopagos = new List<MedioPago>();
+                MedioPago m = new MedioPago();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return mediopagos;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_MEDIO_PAGO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -355,33 +530,60 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     m = Utils.medioPago_parse(rows[i]);
                     mediopagos.Add(m);
                 }
 
+                return mediopagos;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                MedioPago m = new MedioPago();
 
-            return mediopagos;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_MedioPago,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<MedioPago>();
+            }
 
         }
 
         public ResponseBD add_MedioPago(MedioPago m)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_MEDIO_PAGO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -418,13 +620,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_MedioPago,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (m == null) ? "null" : m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion
@@ -433,17 +654,25 @@ namespace BARABARES_Services
 
         public List<TipoComprobante> selectAll_TipoComprobante()
         {
-            List<TipoComprobante> tipoComprobantes = new List<TipoComprobante>();
-            TipoComprobante t = new TipoComprobante();
-
             try
             {
+                List<TipoComprobante> tipoComprobantes = new List<TipoComprobante>();
+                TipoComprobante t = new TipoComprobante();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoComprobantes;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_TIPO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -459,33 +688,62 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     t = Utils.tipoComprobante_parse(rows[i]);
                     tipoComprobantes.Add(t);
                 }
 
+
+
+                return tipoComprobantes;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                TipoComprobante t = new TipoComprobante();
 
-            return tipoComprobantes;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_TipoComprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoComprobante>();
+            }
 
         }
 
         public ResponseBD add_TipoComprobante(TipoComprobante t)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_TIPO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -522,13 +780,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_TipoComprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (t == null) ? "null" : t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion
@@ -537,17 +814,25 @@ namespace BARABARES_Services
 
         public List<TipoTarjeta> selectAll_TipoTarjeta()
         {
-            List<TipoTarjeta> tipoTarjetas = new List<TipoTarjeta>();
-            TipoTarjeta t = new TipoTarjeta();
-
             try
             {
+                List<TipoTarjeta> tipoTarjetas = new List<TipoTarjeta>();
+                TipoTarjeta t = new TipoTarjeta();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoTarjetas;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_TARJETA_TIPO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -563,33 +848,61 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     t = Utils.tipoTarjeta_parse(rows[i]);
                     tipoTarjetas.Add(t);
                 }
 
+
+                return tipoTarjetas;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                TipoTarjeta t = new TipoTarjeta();
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_TipoTarjeta,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return tipoTarjetas;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoTarjeta>();
+            }
 
         }
 
         public ResponseBD add_TipoTarjeta(TipoTarjeta t)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_TARJETA_TIPO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -627,13 +940,32 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_TipoTarjeta,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (t == null) ? "null" : t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion

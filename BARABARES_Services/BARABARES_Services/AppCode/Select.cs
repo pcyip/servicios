@@ -162,5 +162,13 @@ namespace BARABARES_Services.AppCode
             public bool Semana { get; set; }
             public List<DetallePromocion_Web> Detalle { get; set; }
         }
+
+        public class Producto_Web
+        {
+            public string Nombre { get; set; }
+            public string Imagen { get; set; }
+            public string Descripcion { get; set; }
+            public double PrecioUnitario { get; set; }
+        }
     }
 }

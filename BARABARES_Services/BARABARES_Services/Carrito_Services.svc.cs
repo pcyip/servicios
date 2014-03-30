@@ -21,17 +21,26 @@ namespace BARABARES_Services
 
         public List<Carrito> selectAll_Carrito()
         {
-            List<Carrito> carritos = new List<Carrito>();
-            Carrito c;
-
             try
             {
+                List<Carrito> carritos = new List<Carrito>();
+                Carrito c = new Carrito();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return carritos;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("CARRITO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -39,36 +48,66 @@ namespace BARABARES_Services
                     SqlConn.Close();
                     sqlCmd.Dispose();
                     sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        c = Utils.carrito_parse(rows[i]);
+                        carritos.Add(c);
+                    }
+
                 }
 
-                DataRow[] rows = dt.Select();
-                
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    c = Utils.carrito_parse(rows[i]);
-                    carritos.Add(c);
-                }
-
+                return carritos;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Carrito c = new Carrito();
 
-            return carritos;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Carrito,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Carrito>();
+            }
 
         }
 
         public ResponseBD add_Carrito(Carrito c)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("CARRITO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -98,14 +137,33 @@ namespace BARABARES_Services
 
                     SqlConn.Close();
 
+
                 }
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Carrito,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (c == null) ? "null" : c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion
@@ -114,17 +172,26 @@ namespace BARABARES_Services
 
         public List<DetalleCarrito> selectAll_DetalleCarrito()
         {
-            List<DetalleCarrito> detalleCarritos = new List<DetalleCarrito>();
-            DetalleCarrito d;
-
             try
             {
+                List<DetalleCarrito> detalleCarritos = new List<DetalleCarrito>();
+                DetalleCarrito d = new DetalleCarrito();
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return detalleCarritos;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("CARRITO_DETALLE_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -132,37 +199,66 @@ namespace BARABARES_Services
                     SqlConn.Close();
                     sqlCmd.Dispose();
                     sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        d = Utils.detalleCarrito_parse(rows[i]);
+                        detalleCarritos.Add(d);
+                    }
+
+
                 }
-
-                DataRow[] rows = dt.Select();
-
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    d = Utils.detalleCarrito_parse(rows[i]);
-                    detalleCarritos.Add(d);
-                }
-
+                return detalleCarritos;
             }
             catch (Exception ex)
             {
+                DetalleCarrito d = new DetalleCarrito();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_DetalleCarrito,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
                 Debug.WriteLine(ex.ToString());
+                return new List<DetalleCarrito>();
             }
-
-            return detalleCarritos;
-
         }
 
 
         public ResponseBD add_DetalleCarrito(DetalleCarrito d)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("CARRITO_DETALLE_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -193,15 +289,33 @@ namespace BARABARES_Services
                     response.Mensaje = mensaje.Value.ToString();
 
                     SqlConn.Close();
-
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_DetalleCarrito,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = (d == null) ? "null" : d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         #endregion

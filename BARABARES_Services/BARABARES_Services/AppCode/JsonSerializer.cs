@@ -110,6 +110,11 @@ namespace BARABARES_Services.AppCode
 
         #region Parametro
 
+        public static string selectByPadre_Parametro(int id)
+        {
+            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
+        }
+
         #endregion
 
         #region Pedido

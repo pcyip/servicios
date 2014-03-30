@@ -21,17 +21,26 @@ namespace BARABARES_Services
 
         public List<Vehiculo> selectAll_Vehiculo()
         {
-            List<Vehiculo> vehiculos = new List<Vehiculo>();
-            Vehiculo v;
-
             try
             {
+                List<Vehiculo> vehiculos = new List<Vehiculo>();
+                Vehiculo v;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return vehiculos;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("VEHICULO_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -42,36 +51,62 @@ namespace BARABARES_Services
                 }
 
                 DataRow[] rows = dt.Select();
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     v = Utils.vehiculo_parse(rows[i]);
                     vehiculos.Add(v);
                 }
 
+                return vehiculos;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Vehiculo v = new Vehiculo();
 
-            return vehiculos;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Vehiculo,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Vehiculo>();
+            }
 
         }
 
         public List<Select.Vehiculo> list_Vehiculo()
         {
-            List<Select.Vehiculo> vehiculos = new List<Select.Vehiculo>();
-            Select.Vehiculo v;
-
             try
             {
+                List<Select.Vehiculo> vehiculos = new List<Select.Vehiculo>();
+                Select.Vehiculo v;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return vehiculos;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("VEHICULO_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -89,29 +124,55 @@ namespace BARABARES_Services
                     vehiculos.Add(v);
                 }
 
+                return vehiculos;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Vehiculo v = new Select.Vehiculo();
 
-            return vehiculos;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_Vehiculo,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Vehiculo>();
+            }
 
         }
 
         public List<Select.Vehiculo> search_Vehiculo(Search.Vehiculo veh)
         {
-            List<Select.Vehiculo> vehiculos = new List<Select.Vehiculo>();
-            Select.Vehiculo v;
-
             try
             {
+                List<Select.Vehiculo> vehiculos = new List<Select.Vehiculo>();
+                Select.Vehiculo v;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return vehiculos;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("VEHICULO_SEARCH", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -139,26 +200,53 @@ namespace BARABARES_Services
                     vehiculos.Add(v);
                 }
 
+                return vehiculos;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Vehiculo v = new Select.Vehiculo();
 
-            return vehiculos;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_Vehiculo,
+                    Input = JsonSerializer.search_Vehiculo(veh),
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Vehiculo>();
+            }
 
         }
 
         public ResponseBD add_Vehiculo(Vehiculo v)
         {
-            ResponseBD response = new ResponseBD();
-
             try
             {
+                ResponseBD response = new ResponseBD();
+
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        response.Flujo = Constantes.FALLA;
+                        response.Mensaje = "Error al abrir la conexión a BD";
+                        return response;
+                    }
                     SqlCommand sqlCmd = new SqlCommand("VEHICULO_INSERT", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -194,28 +282,56 @@ namespace BARABARES_Services
                     SqlConn.Close();
 
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_CREAR,
+                    Servicio = Constantes.Add_Vehiculo,
+                    Input = JsonSerializer.add_Vehiculo(v),
+                    Descripcion = ex.ToString(),
+                    Clase = (v == null) ? "null" : v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
 
-            return response;
+                };
+
+                Utils.add_LogBarabares(b);
+
+                ResponseBD response = new ResponseBD();
+                response.Flujo = Constantes.FALLA;
+                response.Mensaje = "Error al abrir la conexión a BD";
+                return response;
+            }
         }
 
         public List<Select.InventarioVehiculo> list_InventarioVehiculo()
         {
-            List<Select.InventarioVehiculo> vehiculos = new List<Select.InventarioVehiculo>();
-            Select.InventarioVehiculo a;
-
             try
             {
+                List<Select.InventarioVehiculo> vehiculos = new List<Select.InventarioVehiculo>();
+                Select.InventarioVehiculo a;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return vehiculos;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("PRODUCTO_X_VEHICULO_LIST_SISTEMA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -233,13 +349,30 @@ namespace BARABARES_Services
                     vehiculos.Add(a);
                 }
 
+                return vehiculos;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.InventarioVehiculo v = new Select.InventarioVehiculo();
 
-            return vehiculos;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_InventarioVehiculo,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.InventarioVehiculo>();
+            }
 
         }
 
@@ -249,17 +382,26 @@ namespace BARABARES_Services
 
         public List<Select.Combo> selectAll_Marca()
         {
-            List<Select.Combo> parametros = new List<Select.Combo>();
-            Select.Combo p;
-
             try
             {
+                List<Select.Combo> parametros = new List<Select.Combo>();
+                Select.Combo p;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("VEHICULO_MARCA_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     sda.SelectCommand = sqlCmd;
@@ -277,29 +419,55 @@ namespace BARABARES_Services
                     parametros.Add(p);
                 }
 
+                return parametros;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Combo v = new Select.Combo();
 
-            return parametros;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Marca,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Combo>();
+            }
 
         }
 
         public List<Select.Combo> selectByMarca_Modelo(int id)
         {
-            List<Select.Combo> parametros = new List<Select.Combo>();
-            Select.Combo p;
-
             try
             {
+                List<Select.Combo> parametros = new List<Select.Combo>();
+                Select.Combo p;
+
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
                 string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
-                    SqlConn.Open();
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
                     SqlCommand sqlCmd = new SqlCommand("VEHICULO_MODELO_SELECT_BY_MARCA", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -320,13 +488,30 @@ namespace BARABARES_Services
                     parametros.Add(p);
                 }
 
+                return parametros;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-            }
+                Select.Combo v = new Select.Combo();
 
-            return parametros;
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectByMarca_Modelo,
+                    Input = JsonSerializer.selectByMarca_Modelo(id),
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Combo>();
+            }
 
         }
 
