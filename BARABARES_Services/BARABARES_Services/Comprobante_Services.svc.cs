@@ -564,6 +564,71 @@ namespace BARABARES_Services
 
         }
 
+        public List<MedioPago> combo_MedioPago()
+        {
+            try
+            {
+                List<MedioPago> mediopagos = new List<MedioPago>();
+                MedioPago m = new MedioPago();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return mediopagos;
+                    }
+                    SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_MEDIO_PAGO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    m = Utils.medioPago_parse(rows[i]);
+                    mediopagos.Add(m);
+                }
+
+                return mediopagos;
+            }
+            catch (Exception ex)
+            {
+                MedioPago m = new MedioPago();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_MedioPago,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<MedioPago>();
+            }
+
+        }
+
         public ResponseBD add_MedioPago(MedioPago m)
         {
             try
@@ -707,6 +772,73 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectAll_TipoComprobante,
+                    Input = "", //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoComprobante>();
+            }
+
+        }
+
+        public List<TipoComprobante> combo_TipoComprobante()
+        {
+            try
+            {
+                List<TipoComprobante> tipoComprobantes = new List<TipoComprobante>();
+                TipoComprobante t = new TipoComprobante();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoComprobantes;
+                    }
+                    SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_TIPO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tipoComprobante_parse(rows[i]);
+                    tipoComprobantes.Add(t);
+                }
+
+
+
+                return tipoComprobantes;
+            }
+            catch (Exception ex)
+            {
+                TipoComprobante t = new TipoComprobante();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_TipoComprobante,
                     Input = "", //TODO
                     Descripcion = ex.ToString(),
                     Clase = t.GetType().Name,

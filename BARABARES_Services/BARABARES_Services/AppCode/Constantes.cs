@@ -31,9 +31,11 @@ namespace BARABARES_Services.AppCode
         //Almacen
         public const string List_Almacen = "http://localhost:2576/Almacen_Services.svc/list_Almacen";
         public const string List_InventarioAlmacen = "http://localhost:2576/Almacen_Services.svc/list_InventarioAlmacen";
+        public const string Search_InventarioAlmacen = "http://localhost:2576/Almacen_Services.svc/search_InventarioAlmacen";
         public const string SelectAll_Almacen = "http://localhost:2576/Almacen_Services.svc/selectAll_Almacen";
         public const string Add_Almacen = "http://localhost:2576/Almacen_Services.svc/add_Almacen";
         public const string Search_Almacen = "http://localhost:2576/Almacen_Services.svc/search_Almacen";
+        public const string Combo_Almacen = "http://localhost:2576/Almacen_Services.svc/combo_Almacen";
 
         //Carrito
         public const string SelectAll_Carrito = "http://localhost:2576/Carrito_Services.svc/selectAll_Carrito";
@@ -45,8 +47,10 @@ namespace BARABARES_Services.AppCode
         public const string List_Comprobante = "http://localhost:2576/Comprobante_Services.svc/list_Comprobante";
         public const string Search_Comprobante = "http://localhost:2576/Comprobante_Services.svc/search_Comprobante";
         public const string SelectAll_MedioPago = "http://localhost:2576/Comprobante_Services.svc/selectAll_MedioPago";
+        public const string Combo_MedioPago = "http://localhost:2576/Comprobante_Services.svc/combo_MedioPago";
         public const string Add_MedioPago = "http://localhost:2576/Comprobante_Services.svc/add_MedioPago";
         public const string SelectAll_TipoComprobante = "http://localhost:2576/Comprobante_Services.svc/selectAll_TipoComprobante";
+        public const string Combo_TipoComprobante = "http://localhost:2576/Comprobante_Services.svc/combo_TipoComprobante";
         public const string Add_TipoComprobante = "http://localhost:2576/Comprobante_Services.svc/add_TipoComprobante";
         public const string SelectAll_Comprobante = "http://localhost:2576/Comprobante_Services.svc/selectAll_Comprobante";
         public const string Add_Comprobante = "http://localhost:2576/Comprobante_Services.svc/Add_Comprobante";
@@ -62,6 +66,8 @@ namespace BARABARES_Services.AppCode
         //Direccion
         public const string SelectAll_TipoCalle = "http://localhost:2576/Direccion_Services.svc/selectAll_TipoCalle";
         public const string SelectAll_TipoUrb = "http://localhost:2576/Direccion_Services.svc/selectAll_TipoUrb";
+        public const string Combo_TipoCalle = "http://localhost:2576/Direccion_Services.svc/combo_TipoCalle";
+        public const string Combo_TipoUrb = "http://localhost:2576/Direccion_Services.svc/combo_TipoUrb";
         public const string SelectAll_Departamento = "http://localhost:2576/Direccion_Services.svc/selectAll_Departamento";
         public const string SelectAll_Provincia = "http://localhost:2576/Direccion_Services.svc/selectAll_Provincia";
         public const string SelectByDepartamento_Provincia = "http://localhost:2576/Direccion_Services.svc/selectByDepartamento_Provincia";
@@ -81,10 +87,13 @@ namespace BARABARES_Services.AppCode
 
         //Movimiento
         public const string SelectAll_Movimiento = "http://localhost:2576/Movimiento_Services.svc/selectAll_Movimiento";
+        public const string List_Movimiento = "http://localhost:2576/Movimiento_Services.svc/list_Movimiento";
+        public const string Search_Movimiento = "http://localhost:2576/Movimiento_Services.svc/search_Movimiento";
         public const string Add_Movimiento = "http://localhost:2576/Movimiento_Services.svc/add_Movimiento";
         public const string SelectAll_DetalleMovimiento = "http://localhost:2576/Movimiento_Services.svc/selectAll_DetalleMovimiento";
         public const string Add_DetalleMovimiento = "http://localhost:2576/Movimiento_Services.svc/add_DetalleMovimiento";
         public const string SelectAll_TipoMovimiento = "http://localhost:2576/Movimiento_Services.svc/selectAll_TipoMovimiento";
+        public const string Combo_TipoMovimiento = "http://localhost:2576/Movimiento_Services.svc/combo_TipoMovimiento";
         public const string Add_TipoMovimiento = "http://localhost:2576/Movimiento_Services.svc/add_TipoMovimiento";
 
         //Parametro
@@ -99,7 +108,9 @@ namespace BARABARES_Services.AppCode
         public const string List_Pedido = "http://localhost:2576/Pedido_Services.svc/list_Pedido";
         public const string Search_Pedido = "http://localhost:2576/Pedido_Services.svc/search_Pedido";
         public const string SelectAll_EstadoPedido = "http://localhost:2576/Pedido_Services.svc/selectAll_EstadoPedido";
+        public const string Combo_EstadoPedido = "http://localhost:2576/Pedido_Services.svc/combo_EstadoPedido";
         public const string SelectAll_MotivoCancelacion = "http://localhost:2576/Pedido_Services.svc/selectAll_MotivoCancelacion";
+        public const string Combo_MotivoCancelacion = "http://localhost:2576/Pedido_Services.svc/combo_MotivoCancelacion";
         public const string SelectAll_DetallePedido = "http://localhost:2576/Pedido_Services.svc/selectAll_DetallePedido";
         public const string Add_Pedido = "http://localhost:2576/Pedido_Services.svc/add_Pedido";
         public const string Add_EstadoPedido = "http://localhost:2576/Pedido_Services.svc/add_EstadoPedido";
@@ -121,6 +132,7 @@ namespace BARABARES_Services.AppCode
         public const string Search_Persona = "http://localhost:2576/Persona_Services.svc/search_Persona";
         public const string Add_Persona = "http://localhost:2576/Persona_Services.svc/add_Persona";
         public const string SelectAll_TipoDocumento = "http://localhost:2576/Persona_Services.svc/selectAll_TipoDocumento";
+        public const string Combo_TipoDocumento = "http://localhost:2576/Persona_Services.svc/combo_TipoDocumento";
         public const string Add_TipoDocumento = "http://localhost:2576/Persona_Services.svc/add_TipoDocumento";
         public const string SelectAll_TipoPersona = "http://localhost:2576/Persona_Services.svc/selectAll_TipoPersona";
         public const string Add_TipoPersona = "http://localhost:2576/Persona_Services.svc/add_TipoPersona";
@@ -132,6 +144,7 @@ namespace BARABARES_Services.AppCode
         public const string Search_Producto = "http://localhost:2576/Producto_Services.svc/search_Producto";
         public const string Add_Producto = "http://localhost:2576/Producto_Services.svc/add_Producto";
         public const string SelectAll_UnidadProducto = "http://localhost:2576/Producto_Services.svc/selectAll_UnidadProducto";
+        public const string Combo_UnidadProducto = "http://localhost:2576/Producto_Services.svc/combo_UnidadProducto";
         public const string SelectAll_TipoProducto = "http://localhost:2576/Producto_Services.svc/selectAll_TipoProducto";
         public const string Add_UnidadProducto = "http://localhost:2576/Producto_Services.svc/add_UnidadProducto";
         public const string Add_TipoProducto = "http://localhost:2576/Producto_Services.svc/add_TipoProducto";
@@ -144,6 +157,8 @@ namespace BARABARES_Services.AppCode
         public const string Add_Promocion = "http://localhost:2576/Promocion_Services.svc/add_Promocion";
         public const string Add_DetallePromocion = "http://localhost:2576/Promocion_Services.svc/add_DetallePromocion";
         public const string SelectAll_Promocion = "http://localhost:2576/Promocion_Services.svc/selectAll_Promocion";
+        public const string Semana_Promocion = "http://localhost:2576/Promocion_Services.svc/semana_Promocion";
+        public const string Search_Promocion = "http://localhost:2576/Promocion_Services.svc/search_Promocion";
         public const string SelectAll_DetallePromocion = "http://localhost:2576/Promocion_Services.svc/selectAll_DetallePromocion";
         public const string List_web_Promocion = "http://localhost:2576/Promocion_Services.svc/list_web_Promocion";
 
@@ -157,11 +172,13 @@ namespace BARABARES_Services.AppCode
         //Tienda
         public const string List_Tienda = "http://localhost:2576/Tienda_Services.svc/list_Tienda";
         public const string SelectAll_Tienda = "http://localhost:2576/Tienda_Services.svc/selectAll_Tienda";
+        public const string Combo_Tienda = "http://localhost:2576/Tienda_Services.svc/combo_Tienda";
         public const string Search_Tienda = "http://localhost:2576/Tienda_Services.svc/search_Tienda";
         public const string Add_Tienda = "http://localhost:2576/Tienda_Services.svc/add_Tienda";
 
         //Usuario
         public const string SelectAll_Usuario = "http://localhost:2576/Usuario_Services.svc/selectAll_Usuario";
+        public const string Combo_Usuario = "http://localhost:2576/Usuario_Services.svc/combo_Usuario";
         public const string Search_Usuario = "http://localhost:2576/Usuario_Services.svc/search_Usuario";
         public const string List_Usuario = "http://localhost:2576/Usuario_Services.svc/list_Usuario";
         public const string List_LogUsuario = "http://localhost:2576/Usuario_Services.svc/list_LogUsuario";
@@ -176,11 +193,15 @@ namespace BARABARES_Services.AppCode
         //Vehiculo
         public const string List_Vehiculo = "http://localhost:2576/Vehiculo_Services.svc/list_Vehiculo";
         public const string SelectAll_Vehiculo = "http://localhost:2576/Vehiculo_Services.svc/selectAll_Vehiculo";
+        public const string Combo_Vehiculo = "http://localhost:2576/Vehiculo_Services.svc/combo_Vehiculo";
         public const string List_InventarioVehiculo = "http://localhost:2576/Vehiculo_Services.svc/list_InventarioVehiculo";
+        public const string Search_InventarioVehiculo = "http://localhost:2576/Vehiculo_Services.svc/search_InventarioVehiculo";
         public const string Search_Vehiculo = "http://localhost:2576/Vehiculo_Services.svc/search_Vehiculo";
         public const string Add_Vehiculo = "http://localhost:2576/Vehiculo_Services.svc/add_Vehiculo";
         public const string SelectAll_Marca = "http://localhost:2576/Vehiculo_Services.svc/selectAll_Marca";
         public const string SelectByMarca_Modelo = "http://localhost:2576/Vehiculo_Services.svc/selectByMarca_Modelo";
+        public const string Combo_Marca = "http://localhost:2576/Vehiculo_Services.svc/combo_Marca";
+        public const string Combo_Modelo = "http://localhost:2576/Vehiculo_Services.svc/combo_Modelo";
 
         #endregion
 

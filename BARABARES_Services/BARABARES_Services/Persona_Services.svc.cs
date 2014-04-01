@@ -545,6 +545,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<TipoDocumento> combo_TipoDocumento()
+        {
+            try
+            {
+                List<TipoDocumento> tipoDocumentos = new List<TipoDocumento>();
+                TipoDocumento t;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoDocumentos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PERSONA_DOCUMENTO_TIPO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tipoDocumento_parse(rows[i]);
+                    tipoDocumentos.Add(t);
+                }
+
+                return tipoDocumentos;
+            }
+            catch (Exception ex)
+            {
+                TipoDocumento p = new TipoDocumento();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_TipoDocumento,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoDocumento>();
+            }
+
+        }
+
         public ResponseBD add_TipoDocumento(TipoDocumento t)
         {
             try

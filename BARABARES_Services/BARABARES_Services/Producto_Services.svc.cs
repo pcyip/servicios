@@ -167,7 +167,7 @@ namespace BARABARES_Services
                 using (SqlConnection SqlConn = new SqlConnection(ConnString))
                 {
                     SqlConn.Open();
-                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_SELECT_BY_TIPO", SqlConn);
+                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_SELECT_BY_TIPO_WEB", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
                     sqlCmd.Parameters.Add("@ipnIdTipoProducto", SqlDbType.Int).Value = Int32.Parse(idTipo);
@@ -630,6 +630,72 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectAll_UnidadProducto,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = prd.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<UnidadProducto>();
+            }
+
+        }
+
+        public List<UnidadProducto> combo_UnidadProducto()
+        {
+            try
+            {
+                List<UnidadProducto> unidadProductos = new List<UnidadProducto>();
+                UnidadProducto t;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return unidadProductos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_UNIDAD_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.unidadProducto_parse(rows[i]);
+                    unidadProductos.Add(t);
+                }
+
+                return unidadProductos;
+            }
+            catch (Exception ex)
+            {
+                UnidadProducto prd = new UnidadProducto();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_UnidadProducto,
                     Input = "",
                     Descripcion = ex.ToString(),
                     Clase = prd.GetType().Name,

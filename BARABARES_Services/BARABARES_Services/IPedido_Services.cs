@@ -65,6 +65,13 @@ namespace BARABARES_Services
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_EstadoPedido")]
+        List<EstadoPedido> combo_EstadoPedido();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "add_EstadoPedido")]
@@ -76,6 +83,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_MotivoCancelacion")]
         List<MotivoCancelacion> selectAll_MotivoCancelacion();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_MotivoCancelacion")]
+        List<MotivoCancelacion> combo_MotivoCancelacion();
 
         [OperationContract]
         [WebInvoke(Method = "POST",

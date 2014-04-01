@@ -93,6 +93,13 @@ namespace BARABARES_Services
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_TipoCalle")]
+        List<TipoCalle> combo_TipoCalle();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "add_TipoCalle")]
@@ -104,6 +111,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_TipoUrb")]
         List<TipoUrb> selectAll_TipoUrb();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_TipoUrb")]
+        List<TipoUrb> combo_TipoUrb();
 
         [OperationContract]
         [WebInvoke(Method = "POST",

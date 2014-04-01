@@ -85,6 +85,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<Usuario> combo_Usuario()
+        {
+            try
+            {
+                List<Usuario> usuarios = new List<Usuario>();
+                Usuario u;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return usuarios;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("USUARIO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    u = Utils.usuario_parse(rows[i]);
+                    usuarios.Add(u);
+                }
+
+                return usuarios;
+            }
+            catch (Exception ex)
+            {
+                Usuario d = new Usuario();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Usuario,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Usuario>();
+            }
+
+        }
+
         public List<Select.Usuario> list_Usuario()
         {
             try

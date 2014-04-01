@@ -90,6 +90,155 @@ namespace BARABARES_Services
 
         }
 
+        public List<Select.Movimiento> list_Movimiento()
+        {
+            try
+            {
+                List<Select.Movimiento> movimientos = new List<Select.Movimiento>();
+                Select.Movimiento m = new Select.Movimiento();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return movimientos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("MOVIMIENTO_LIST_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = m.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    m = Utils.select_movimiento_parse(rows[i]);
+                    movimientos.Add(m);
+                }
+
+                return movimientos;
+            }
+            catch (Exception ex)
+            {
+                Select.Movimiento m = new Select.Movimiento();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_Movimiento,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Movimiento>();
+            }
+
+        }
+
+        public List<Select.Movimiento> search_Movimiento(Search.Movimiento mov)
+        {
+            try
+            {
+                List<Select.Movimiento> movimientos = new List<Select.Movimiento>();
+                Select.Movimiento m = new Select.Movimiento();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return movimientos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("MOVIMIENTO_SEARCH", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdMovimiento", SqlDbType.Int).Value = mov.IdMovimiento;
+                    sqlCmd.Parameters.Add("@ipnIdTipoMovimiento", SqlDbType.Int).Value = mov.TipoMovimiento;
+                    sqlCmd.Parameters.Add("@ipnIdAlmacen", SqlDbType.Int).Value = mov.Almacen;
+                    sqlCmd.Parameters.Add("@ipsUsuario", SqlDbType.VarChar).Value = mov.Usuario;
+                    sqlCmd.Parameters.Add("@ipdDesde", SqlDbType.DateTime).Value = mov.Desde;
+                    sqlCmd.Parameters.Add("@ipdHasta", SqlDbType.DateTime).Value = mov.Hasta;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_BUSCAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = m.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    m = Utils.select_movimiento_parse(rows[i]);
+                    movimientos.Add(m);
+                }
+
+                return movimientos;
+            }
+            catch (Exception ex)
+            {
+                Select.Movimiento m = new Select.Movimiento();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_Movimiento,
+                    Input = JsonSerializer.search_Movimiento(mov),
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Movimiento>();
+            }
+
+        }
+
         public ResponseBD add_Movimiento(Movimiento m)
         {
             try
@@ -397,6 +546,72 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectAll_TipoMovimiento,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoMovimiento>();
+            }
+
+        }
+
+        public List<TipoMovimiento> combo_TipoMovimiento()
+        {
+            try
+            {
+                List<TipoMovimiento> tipoMovimientos = new List<TipoMovimiento>();
+                TipoMovimiento t = new TipoMovimiento();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoMovimientos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("MOVIMIENTO_TIPO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tipoMovimiento_parse(rows[i]);
+                    tipoMovimientos.Add(t);
+                }
+
+                return tipoMovimientos;
+            }
+            catch (Exception ex)
+            {
+                TipoMovimiento m = new TipoMovimiento();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_TipoMovimiento,
                     Input = "",
                     Descripcion = ex.ToString(),
                     Clase = m.GetType().Name,

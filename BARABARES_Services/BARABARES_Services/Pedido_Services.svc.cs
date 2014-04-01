@@ -575,6 +575,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<EstadoPedido> combo_EstadoPedido()
+        {
+            try
+            {
+                List<EstadoPedido> estadoPedidos = new List<EstadoPedido>();
+                EstadoPedido e = new EstadoPedido();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return estadoPedidos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PEDIDO_ESTADO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    e = Utils.estadoPedido_parse(rows[i]);
+                    estadoPedidos.Add(e);
+                }
+
+                return estadoPedidos;
+            }
+            catch (Exception ex)
+            {
+                EstadoPedido d = new EstadoPedido();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_EstadoPedido,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<EstadoPedido>();
+            }
+
+        }
+
         public ResponseBD add_EstadoPedido(EstadoPedido e)
         {
             try
@@ -717,6 +783,72 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectAll_MotivoCancelacion,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<MotivoCancelacion>();
+            }
+
+        }
+
+        public List<MotivoCancelacion> combo_MotivoCancelacion()
+        {
+            try
+            {
+                List<MotivoCancelacion> motivosCancelacion = new List<MotivoCancelacion>();
+                MotivoCancelacion m = new MotivoCancelacion();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return motivosCancelacion;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PEDIDO_MOTIVO_CANCELACION_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    m = Utils.motivoCancelacion_parse(rows[i]);
+                    motivosCancelacion.Add(m);
+                }
+
+                return motivosCancelacion;
+            }
+            catch (Exception ex)
+            {
+                MotivoCancelacion d = new MotivoCancelacion();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_MotivoCancelacion,
                     Input = "",
                     Descripcion = ex.ToString(),
                     Clase = d.GetType().Name,

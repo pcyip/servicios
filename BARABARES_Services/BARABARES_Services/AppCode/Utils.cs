@@ -347,6 +347,21 @@ namespace BARABARES_Services.AppCode
             return m;
         }
 
+        public static Select.Movimiento select_movimiento_parse(DataRow r)
+        {
+            Select.Movimiento m = new Select.Movimiento();
+            m.IdMovimiento = Int32.Parse(r["idMovimiento"].ToString());
+            m.Descripcion = r["descripcion"].ToString();
+            m.Fecha = DateTime.ParseExact(r["fecha"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            m.Almacen = r["almacen"].ToString();
+            m.Usuario = r["usuario"].ToString();
+            m.Tipo = r["tipo"].ToString();
+            m.Vehiculo = r["vehiculo"].ToString();
+            m.Pedido = Int32.Parse(r["pedido"].ToString());
+
+            return m;
+        }
+
         public static DetalleMovimiento detalleMovimiento_parse(DataRow r)
         {
             DetalleMovimiento d = new DetalleMovimiento();
@@ -624,7 +639,7 @@ namespace BARABARES_Services.AppCode
             Select.Producto_Web p = new Select.Producto_Web();
             p.Nombre = r["nombre"].ToString();
             p.Imagen = r["imagen"].ToString();
-            p.Descripcion = r["presentacion"].ToString() + " " + r["idUnidadProducto"].ToString();
+            p.Descripcion = r["presentacion"].ToString() + " " + r["unidad"].ToString();
             p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
 
             return p;
@@ -733,6 +748,20 @@ namespace BARABARES_Services.AppCode
             d.Unidad = r["unidad"].ToString();
 
             return d;
+        }
+
+        public static Select.PromocionSemana semana_promocion_parse(DataRow r)
+        {
+            Select.PromocionSemana p = new Select.PromocionSemana();
+            p.Descripcion = r["Descripcion"].ToString();
+            p.Imagen = r["imagen"].ToString();
+            p.Precio = Double.Parse(r["Precio"].ToString());
+            p.NombreProducto = r["Nombre"].ToString();
+            p.Cantidad = Int32.Parse(r["Cantidad"].ToString());
+            p.Presentacion = Int32.Parse(r["Presentacion"].ToString());
+            p.Unidad = r["Unidad"].ToString();
+
+            return p;
         }
 
         #endregion

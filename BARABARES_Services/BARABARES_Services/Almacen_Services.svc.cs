@@ -42,6 +42,11 @@ namespace BARABARES_Services
                     }
                     SqlCommand sqlCmd = new SqlCommand("ALMACEN_SELECT_ALL", SqlConn);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = a.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
+
                     sda.SelectCommand = sqlCmd;
                     sda.Fill(dt);
                     SqlConn.Close();
@@ -71,6 +76,75 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectAll_Almacen,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Almacen>();
+            }
+
+        }
+
+        public List<Almacen> combo_Almacen()
+        {
+            try
+            {
+                List<Almacen> almacenes = new List<Almacen>();
+                Almacen a = new Almacen();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return almacenes;
+                    }
+                    SqlCommand sqlCmd = new SqlCommand("ALMACEN_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        a = Utils.almacen_parse(rows[i]);
+                        almacenes.Add(a);
+                    }
+
+
+                }
+
+                return almacenes;
+
+            }
+            catch (Exception ex)
+            {
+                Almacen a = new Almacen();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Almacen,
                     Input = "",
                     Descripcion = ex.ToString(),
                     Clase = a.GetType().Name,
@@ -378,6 +452,82 @@ namespace BARABARES_Services
                     Input = "",
                     Descripcion = ex.ToString(),
                     Clase = a.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+                return new List<Select.InventarioAlmacen>();
+            }
+
+        }
+
+        public List<Select.InventarioAlmacen> search_InventarioAlmacen(Search.InventarioAlmacen i)
+        {
+            try
+            {
+                List<Select.InventarioAlmacen> almacenes = new List<Select.InventarioAlmacen>();
+                Select.InventarioAlmacen a = new Select.InventarioAlmacen();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return almacenes;
+                    }
+                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_X_ALMACEN_SEARCH", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipsNombre", SqlDbType.VarChar).Value = i.Nombre;
+                    sqlCmd.Parameters.Add("@ipnIdAlmacen", SqlDbType.Int).Value = i.Almacen;
+                    sqlCmd.Parameters.Add("@ipnIdUnidad", SqlDbType.Int).Value = i.Unidad;
+                    sqlCmd.Parameters.Add("@ipnPresentacion", SqlDbType.Int).Value = i.Presentacion;
+                    sqlCmd.Parameters.Add("@ipdDesde", SqlDbType.DateTime).Value = i.Desde;
+                    sqlCmd.Parameters.Add("@ipdHasta", SqlDbType.DateTime).Value = i.Hasta;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_BUSCAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = a.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+
+
+                    DataRow[] rows = dt.Select();
+
+                    for (int v = 0; v < rows.Length; v++)
+                    {
+                        a = Utils.select_inventario_almacen_parse(rows[v]);
+                        almacenes.Add(a);
+                    }
+                }
+
+                return almacenes;
+            }
+            catch (Exception ex)
+            {
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Search_InventarioAlmacen,
+                    Input = JsonSerializer.search_InventarioAlmacen(i),
+                    Descripcion = ex.ToString(),
+                    Clase = (i == null) ? "null" : i.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
                     Estado = Constantes.FALLA,
                     Ip = "",

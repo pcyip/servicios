@@ -85,6 +85,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<Vehiculo> combo_Vehiculo()
+        {
+            try
+            {
+                List<Vehiculo> vehiculos = new List<Vehiculo>();
+                Vehiculo v;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return vehiculos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("VEHICULO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    v = Utils.vehiculo_parse(rows[i]);
+                    vehiculos.Add(v);
+                }
+
+                return vehiculos;
+            }
+            catch (Exception ex)
+            {
+                Vehiculo v = new Vehiculo();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Vehiculo,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Vehiculo>();
+            }
+
+        }
+
         public List<Select.Vehiculo> list_Vehiculo()
         {
             try
@@ -376,6 +442,84 @@ namespace BARABARES_Services
 
         }
 
+        public List<Select.InventarioVehiculo> search_InventarioVehiculo(Search.InventarioVehiculo veh)
+        {
+            try
+            {
+                List<Select.InventarioVehiculo> vehiculos = new List<Select.InventarioVehiculo>();
+                Select.InventarioVehiculo a = new Select.InventarioVehiculo();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return vehiculos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_X_VEHICULO_SEARCH", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipsNombre", SqlDbType.VarChar).Value = veh.Nombre;
+                    sqlCmd.Parameters.Add("@ipnVehiculo", SqlDbType.Int).Value = veh.Vehiculo;
+                    sqlCmd.Parameters.Add("@ipnIdUnidad", SqlDbType.Int).Value = veh.Unidad;
+                    sqlCmd.Parameters.Add("@ipnPresentacion", SqlDbType.Int).Value = veh.Presentacion;
+                    sqlCmd.Parameters.Add("@ipdDesde", SqlDbType.DateTime).Value = veh.Desde;
+                    sqlCmd.Parameters.Add("@ipdHasta", SqlDbType.DateTime).Value = veh.Hasta;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_BUSCAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = a.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    a = Utils.select_inventario_vehiculo_parse(rows[i]);
+                    vehiculos.Add(a);
+                }
+
+                return vehiculos;
+            }
+            catch (Exception ex)
+            {
+                Select.InventarioVehiculo v = new Select.InventarioVehiculo();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_BUSCAR,
+                    Servicio = Constantes.Search_InventarioVehiculo,
+                    Input = JsonSerializer.search_InventarioVehiculo(veh),
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.InventarioVehiculo>();
+            }
+
+        }
+
         #endregion
 
         #region Marca
@@ -446,6 +590,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<Select.Combo> combo_Marca()
+        {
+            try
+            {
+                List<Select.Combo> parametros = new List<Select.Combo>();
+                Select.Combo p;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("VEHICULO_MARCA_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.combo_parametro_parse(rows[i]);
+                    parametros.Add(p);
+                }
+
+                return parametros;
+            }
+            catch (Exception ex)
+            {
+                Select.Combo v = new Select.Combo();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Marca,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Combo>();
+            }
+
+        }
+
         public List<Select.Combo> selectByMarca_Modelo(int id)
         {
             try
@@ -498,6 +708,75 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByMarca_Modelo,
+                    Input = JsonSerializer.selectByMarca_Modelo(id),
+                    Descripcion = ex.ToString(),
+                    Clase = v.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Combo>();
+            }
+
+        }
+
+        public List<Select.Combo> combo_Modelo(int id)
+        {
+            try
+            {
+                List<Select.Combo> parametros = new List<Select.Combo>();
+                Select.Combo p;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return parametros;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("VEHICULO_MODELO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnCodigoPadre", SqlDbType.Int).Value = id;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.combo_parametro_parse(rows[i]);
+                    parametros.Add(p);
+                }
+
+                return parametros;
+            }
+            catch (Exception ex)
+            {
+                Select.Combo v = new Select.Combo();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Modelo,
                     Input = JsonSerializer.selectByMarca_Modelo(id),
                     Descripcion = ex.ToString(),
                     Clase = v.GetType().Name,

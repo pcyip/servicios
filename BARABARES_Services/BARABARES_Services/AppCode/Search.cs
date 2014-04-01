@@ -31,10 +31,40 @@ namespace BARABARES_Services.AppCode
             public DateTime Hasta { get; set; }
         }
 
+        public class InventarioAlmacen
+        {
+            public string Nombre { get; set; }
+            public int Almacen { get; set; }
+            public int Unidad { get; set; }
+            public int Presentacion { get; set; }
+            public DateTime Desde { get; set; }
+            public DateTime Hasta { get; set; }
+        }
+
+        public class InventarioVehiculo
+        {
+            public string Nombre { get; set; }
+            public int Vehiculo { get; set; }
+            public int Unidad { get; set; }
+            public int Presentacion { get; set; }
+            public DateTime Desde { get; set; }
+            public DateTime Hasta { get; set; }
+        }
+
         public class LogUsuario
         {
             public string Nombre { get; set; }
             public string Accion { get; set; }
+            public DateTime Desde { get; set; }
+            public DateTime Hasta { get; set; }
+        }
+
+        public class Movimiento
+        {
+            public int IdMovimiento { get; set; }
+            public int TipoMovimiento { get; set; }
+            public int Almacen { get; set; }
+            public string Usuario { get; set; }
             public DateTime Desde { get; set; }
             public DateTime Hasta { get; set; }
         }
@@ -83,6 +113,16 @@ namespace BARABARES_Services.AppCode
             public int IdUnidadProducto { get; set; }
             public int Presentacion { get; set; }
             public bool Activo { get; set; }
+            public DateTime Desde { get; set; }
+            public DateTime Hasta { get; set; }
+        }
+
+        public class Promocion
+        {
+            public string Nombre { get; set; }
+            public double Minimo { get; set; }
+            public double Maximo { get; set; }
+            public bool Semana { get; set; }
             public DateTime Desde { get; set; }
             public DateTime Hasta { get; set; }
         }

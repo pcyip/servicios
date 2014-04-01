@@ -25,6 +25,20 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
+            UriTemplate = "search_Promocion")]
+        List<Promocion> search_Promocion(Search.Promocion pro);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "semana_Promocion")]
+        List<Select.PromocionSemana> semana_Promocion();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json,
             UriTemplate = "add_Promocion")]
         ResponseBD add_Promocion(Promocion p);
 

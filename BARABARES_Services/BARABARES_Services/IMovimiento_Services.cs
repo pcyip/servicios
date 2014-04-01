@@ -1,4 +1,5 @@
-﻿using BARABARES_Services.DTO;
+﻿using BARABARES_Services.AppCode;
+using BARABARES_Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,20 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_Movimiento")]
         List<Movimiento> selectAll_Movimiento();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "list_Movimiento")]
+        List<Select.Movimiento> list_Movimiento();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json,
+            UriTemplate = "search_Movimiento")]
+        List<Select.Movimiento> search_Movimiento(Search.Movimiento m);
 
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -47,6 +62,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_TipoMovimiento")]
         List<TipoMovimiento> selectAll_TipoMovimiento();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_TipoMovimiento")]
+        List<TipoMovimiento> combo_TipoMovimiento();
 
         [OperationContract]
         [WebInvoke(Method = "POST",

@@ -82,6 +82,7 @@
     <Compile Include="AppCode\BBSessionManager.cs" />
     <Compile Include="AppCode\Constants.cs" />
     <Compile Include="AppCode\Constantes.cs" />
+    <Compile Include="AppCode\DriveOAuthAuthentication.cs" />
     <Compile Include="AppCode\JsonSerializer.cs" />
     <Compile Include="AppCode\Search.cs" />
     <Compile Include="AppCode\Select.cs" />

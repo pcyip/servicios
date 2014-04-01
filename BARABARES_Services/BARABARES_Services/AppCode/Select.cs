@@ -52,6 +52,18 @@ namespace BARABARES_Services.AppCode
             public DateTime Fecha { get; set; }
         }
 
+        public class Movimiento
+        {
+            public int IdMovimiento { get; set; }
+            public string Descripcion { get; set; }
+            public DateTime Fecha { get; set; }
+            public string Almacen { get; set; }
+            public string Usuario { get; set; }
+            public string Tipo { get; set; }
+            public string Vehiculo { get; set; }
+            public int Pedido { get; set; }
+        }
+
         public class Pedido
         {
             public int IdPedido { get; set; }
@@ -79,6 +91,17 @@ namespace BARABARES_Services.AppCode
             public char Sexo { get; set; }        
             public bool Activo { get; set; }
             public string Usuario { get; set; }
+        }
+
+        public class PromocionSemana
+        {
+            public string Descripcion { get; set; }
+            public double Precio { get; set; }
+            public string Imagen { get; set; }
+            public int Cantidad { get; set; }
+            public string NombreProducto { get; set; }
+            public int Presentacion { get; set; }
+            public string Unidad { get; set; }
         }
 
         public class InventarioAlmacen

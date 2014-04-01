@@ -85,6 +85,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<Tienda> combo_Tienda()
+        {
+            try
+            {
+                List<Tienda> tiendas = new List<Tienda>();
+                Tienda t;
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tiendas;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("TIENDA_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tienda_parse(rows[i]);
+                    tiendas.Add(t);
+                }
+
+                return tiendas;
+            }
+            catch (Exception ex)
+            {
+                Tienda t = new Tienda();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Tienda,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Tienda>();
+            }
+
+        }
+
         public List<Select.Tienda> list_Tienda()
         {
             try

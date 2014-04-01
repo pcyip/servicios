@@ -25,6 +25,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_Almacen")]
+        List<Almacen> combo_Almacen();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "list_Almacen")]
         List<Select.Almacen> list_Almacen();
 
@@ -48,6 +55,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "list_InventarioAlmacen")]
         List<Select.InventarioAlmacen> list_InventarioAlmacen();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json,
+            UriTemplate = "search_InventarioAlmacen")]
+        List<Select.InventarioAlmacen> search_InventarioAlmacen(Search.InventarioAlmacen i);
 
     }
 }

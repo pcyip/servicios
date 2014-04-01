@@ -65,6 +65,13 @@ namespace BARABARES_Services
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_TipoDocumento")]
+        List<TipoDocumento> combo_TipoDocumento();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "add_TipoDocumento")]

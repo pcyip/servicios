@@ -38,6 +38,18 @@ namespace BARABARES_Services.AppCode
                 "}";
         }
 
+        public static string search_InventarioAlmacen(Search.InventarioAlmacen p)
+        {
+            return "{" +
+                '"' + "Nombre" + '"' + ": " + '"' + p.Nombre + '"' + ',' +
+                '"' + "Desde" + '"' + ": " + '"' + Utils.dateToJson(p.Desde) + '"' + ',' +
+                '"' + "Hasta" + '"' + ": " + '"' + Utils.dateToJson(p.Hasta) + '"' + ',' +
+                '"' + "Unidad" + '"' + ": " + p.Unidad.ToString() + ',' +
+                '"' + "Presentacion" + '"' + ": " + p.Presentacion.ToString() + ',' +
+                '"' + "Almacen" + '"' + ": " + p.Almacen.ToString() +
+                "}";
+        }
+
         #endregion
 
         #region Carrito
@@ -105,6 +117,18 @@ namespace BARABARES_Services.AppCode
         #endregion
 
         #region Movimiento
+
+        public static string search_Movimiento(Search.Movimiento p)
+        {
+            return "{" +
+                '"' + "Usuario" + '"' + ": " + '"' + p.Usuario + '"' + ',' +
+                '"' + "Desde" + '"' + ": " + '"' + Utils.dateToJson(p.Desde) + '"' + ',' +
+                '"' + "Hasta" + '"' + ": " + '"' + Utils.dateToJson(p.Hasta) + '"' + ',' +
+                '"' + "IdMovimiento" + '"' + ": " + p.IdMovimiento.ToString() + ',' +
+                '"' + "TipoMovimiento" + '"' + ": " + p.TipoMovimiento.ToString() + ',' +
+                '"' + "Almacen" + '"' + ": " + p.Almacen.ToString() +
+                "}";
+        }
 
         #endregion
 
@@ -305,6 +329,19 @@ namespace BARABARES_Services.AppCode
 
         }
 
+        public static string search_Promocion(Search.Promocion d)
+        {
+            return "{" +
+                '"' + "Nombre" + '"' + ": " + '"' + d.Nombre + '"' + ',' +
+                '"' + "Semana" + '"' + ": " + (d.Semana ? "true" : "false") + ',' +
+                '"' + "Minimo" + '"' + ": " + d.Minimo.ToString() + ',' +
+                '"' + "Maximo" + '"' + ": " + d.Maximo.ToString() + ',' +
+                '"' + "Desde" + '"' + ": " + '"' + Utils.dateToJson(d.Desde) + '"' + ',' +
+                '"' + "Hasta" + '"' + ": " + '"' + Utils.dateToJson(d.Hasta) + '"' + ',' +
+                "}";
+
+        }
+
         #endregion
 
         #region Rol
@@ -442,6 +479,18 @@ namespace BARABARES_Services.AppCode
                 '"' + "Marca" + '"' + ": " + p.Marca.ToString() + ',' +
                 '"' + "Modelo" + '"' + ": " + p.Modelo.ToString() + ',' +
                 '"' + "IdTienda" + '"' + ": " + p.IdTienda.ToString() + ',' +
+                "}";
+        }
+
+        public static string search_InventarioVehiculo(Search.InventarioVehiculo p)
+        {
+            return "{" +
+                '"' + "Nombre" + '"' + ": " + '"' + p.Nombre + '"' + ',' +
+                '"' + "Desde" + '"' + ": " + '"' + Utils.dateToJson(p.Desde) + '"' + ',' +
+                '"' + "Hasta" + '"' + ": " + '"' + Utils.dateToJson(p.Hasta) + '"' + ',' +
+                '"' + "Unidad" + '"' + ": " + p.Unidad.ToString() + ',' +
+                '"' + "Presentacion" + '"' + ": " + p.Presentacion.ToString() + ',' +
+                '"' + "Vehiculo" + '"' + ": " + p.Vehiculo.ToString() +
                 "}";
         }
 

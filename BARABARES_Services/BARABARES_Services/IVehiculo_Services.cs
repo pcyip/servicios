@@ -25,6 +25,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_Vehiculo")]
+        List<Vehiculo> combo_Vehiculo();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "list_Vehiculo")]
         List<Select.Vehiculo> list_Vehiculo();
 
@@ -53,6 +60,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_Marca")]
+        List<Select.Combo> combo_Marca();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectByMarca_Modelo")]
         List<Select.Combo> selectByMarca_Modelo(int id);
 
@@ -60,7 +74,21 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_Modelo")]
+        List<Select.Combo> combo_Modelo(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "list_InventarioVehiculo")]
         List<Select.InventarioVehiculo> list_InventarioVehiculo();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json,
+            UriTemplate = "search_InventarioVehiculo")]
+        List<Select.InventarioVehiculo> search_InventarioVehiculo(Search.InventarioVehiculo veh);
     }
 }

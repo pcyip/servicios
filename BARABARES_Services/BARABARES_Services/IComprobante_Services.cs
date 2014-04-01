@@ -65,6 +65,13 @@ namespace BARABARES_Services
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_MedioPago")]
+        List<MedioPago> combo_MedioPago();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "add_MedioPago")]
@@ -76,6 +83,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_TipoComprobante")]
         List<TipoComprobante> selectAll_TipoComprobante();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "combo_TipoComprobante")]
+        List<TipoComprobante> combo_TipoComprobante();
 
         [OperationContract]
         [WebInvoke(Method = "POST",

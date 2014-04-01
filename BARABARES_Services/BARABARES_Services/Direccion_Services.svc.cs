@@ -861,6 +861,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<TipoCalle> combo_TipoCalle()
+        {
+            try
+            {
+                List<TipoCalle> tipoCalles = new List<TipoCalle>();
+                TipoCalle t = new TipoCalle();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoCalles;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("DIRECCION_CALLE_TIPO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tipoCalle_parse(rows[i]);
+                    tipoCalles.Add(t);
+                }
+
+                return tipoCalles;
+            }
+            catch (Exception ex)
+            {
+                TipoCalle t = new TipoCalle();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_TipoCalle,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoCalle>();
+            }
+
+        }
+
         public ResponseBD add_TipoCalle(TipoCalle t)
         {
             try
@@ -1005,6 +1071,72 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectAll_TipoUrb,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<TipoUrb>();
+            }
+
+        }
+
+        public List<TipoUrb> combo_TipoUrb()
+        {
+            try
+            {
+                List<TipoUrb> tipoUrbs = new List<TipoUrb>();
+                TipoUrb t = new TipoUrb();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return tipoUrbs;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("DIRECCION_URB_TIPO_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tipoUrb_parse(rows[i]);
+                    tipoUrbs.Add(t);
+                }
+
+                return tipoUrbs;
+            }
+            catch (Exception ex)
+            {
+                TipoUrb t = new TipoUrb();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_TipoUrb,
                     Input = "",
                     Descripcion = ex.ToString(),
                     Clase = t.GetType().Name,
