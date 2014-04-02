@@ -39,6 +39,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectByUsuario_Sistema_Perfil")]
+        List<Perfil> selectByUsuario_Sistema_Perfil(string usuario);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectById_Perfil")]
         Perfil selectById_Perfil(int id);
 

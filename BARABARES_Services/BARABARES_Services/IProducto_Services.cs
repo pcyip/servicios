@@ -48,7 +48,7 @@ namespace BARABARES_Services
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectByTipo_Producto")]
-        List<Producto> selectByTipo_Producto(int idTipo);
+        List<Select.Producto> selectByTipo_Producto(int idTipo);
 
         [OperationContract]
         [WebInvoke(Method = "GET",
@@ -62,7 +62,7 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "search_Producto")]
-        List<Producto> search_Producto(Search.Producto p);
+        List<Select.Producto> search_Producto(Search.Producto p);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

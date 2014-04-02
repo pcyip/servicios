@@ -93,6 +93,56 @@ namespace BARABARES_Services.AppCode
             public string Usuario { get; set; }
         }
 
+        public class DetallePersona
+        {
+            public int IdPersona { get; set; }
+            public string Nombres { get; set; }
+            public string TipoDocumento { get; set; }
+            public int NumeroDocumento { get; set; }
+            public int Telefono { get; set; }
+            public int Celular { get; set; }
+            public char Sexo { get; set; }
+            public DateTime FechaNacimiento { get; set; }
+            public string Email { get; set; }
+            public bool Activo { get; set; }
+            public string Usuario { get; set; }
+            public string TipoCalle { get; set; }
+            public string Calle { get; set; }
+            public string Numero { get; set; }
+            public string Interior { get; set; }
+            public string TipoUrb { get; set; }
+            public string Urbanizacion { get; set; }
+            public string Mzlt { get; set; }
+            public string Referencia { get; set; }
+            public string Departamento { get; set; }
+            public string Provincia { get; set; }
+            public string Distrito { get; set; }
+            
+        }
+
+        public class Producto
+        {
+            public int IdProducto { get; set; }
+            public string Nombre { get; set; }
+            public string Descripcion { get; set; }
+            public bool Perecible { get; set; }
+            public string PrecioUnitario { get; set; }
+            public DateTime FechaCreacion { get; set; }
+            public string Presentacion { get; set; }
+            public bool Activo { get; set; }
+        }
+
+        public class Promocion
+        {
+            public int IdPromocion { get; set; }
+            public string Nombre { get; set; }
+            public string Descripcion { get; set; }
+            public DateTime FechaInicio { get; set; }
+            public DateTime FechaFin { get; set; }
+            public bool Semana { get; set; }
+            public string Precio { get; set; }
+        }
+
         public class PromocionSemana
         {
             public string Descripcion { get; set; }

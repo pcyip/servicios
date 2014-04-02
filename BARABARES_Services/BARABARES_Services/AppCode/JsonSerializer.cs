@@ -168,6 +168,11 @@ namespace BARABARES_Services.AppCode
             return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
         }
 
+        public static string selectByUsuario_Sistema_Perfil(string usuario)
+        {
+            return "{" + '"' + "usuario" + '"' + ": " + '"' + usuario + '"' + "}";
+        }
+
         public static string selectById_Perfil(int id)
         {
             return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
@@ -271,6 +276,7 @@ namespace BARABARES_Services.AppCode
                 '"' + "Nombre" + '"' + ": " + '"' + d.Nombre + '"' + ',' +
                 '"' + "Descripcion" + '"' + ": " + '"' + d.Descripcion + '"' + ',' +
                 '"' + "IdUnidadProducto" + '"' + ": " + d.IdUnidadProducto.ToString() + ',' +
+                '"' + "IdMoneda" + '"' + ": " + d.IdMoneda.ToString() + ',' +
                 '"' + "Presentacion" + '"' + ": " + d.Presentacion.ToString() + ',' +
                 '"' + "Perecible" + '"' + ": " + (d.Perecible ? "true" : "false") + ',' +
                 '"' + "Activo" + '"' + ": " + (d.Activo ? "true" : "false") + ',' +
@@ -306,6 +312,7 @@ namespace BARABARES_Services.AppCode
         {
             return "{" +
                 '"' + "IdPromocion" + '"' + ": " + d.IdPromocion.ToString() + ',' +
+                '"' + "IdMoneda" + '"' + ": " + d.IdMoneda.ToString() + ',' +
                 '"' + "Nombre" + '"' + ": " + '"' + d.Nombre + '"' + ',' +
                 '"' + "Descripcion" + '"' + ": " + '"' + d.Descripcion + '"' + ',' +
                 '"' + "Semana" + '"' + ": " + (d.Semana ? "true" : "false") + ',' +

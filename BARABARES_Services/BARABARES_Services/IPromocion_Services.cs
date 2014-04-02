@@ -19,14 +19,14 @@ namespace BARABARES_Services
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_Promocion")]
-        List<Promocion> selectAll_Promocion();
+        List<Select.Promocion> selectAll_Promocion();
 
         [OperationContract]
         [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "search_Promocion")]
-        List<Promocion> search_Promocion(Search.Promocion pro);
+        List<Select.Promocion> search_Promocion(Search.Promocion pro);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

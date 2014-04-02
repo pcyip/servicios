@@ -19,12 +19,12 @@ namespace BARABARES_Services
     {
         #region Promocion
 
-        public List<Promocion> selectAll_Promocion()
+        public List<Select.Promocion> selectAll_Promocion()
         {
             try
             {
-                List<Promocion> promociones = new List<Promocion>();
-                Promocion p;
+                List<Select.Promocion> promociones = new List<Select.Promocion>();
+                Select.Promocion p;
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
@@ -54,7 +54,7 @@ namespace BARABARES_Services
 
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    p = Utils.promocion_parse(rows[i]);
+                    p = Utils.select_promocion_parse(rows[i]);
                     promociones.Add(p);
                 }
 
@@ -63,7 +63,7 @@ namespace BARABARES_Services
             }
             catch (Exception ex)
             {
-                Promocion d = new Promocion();
+                Select.Promocion d = new Select.Promocion();
 
                 LogBarabares b = new LogBarabares()
                 {
@@ -81,17 +81,17 @@ namespace BARABARES_Services
 
                 Utils.add_LogBarabares(b);
 
-                return new List<Promocion>();
+                return new List<Select.Promocion>();
             }
 
         }
 
-        public List<Promocion> search_Promocion(Search.Promocion pro)
+        public List<Select.Promocion> search_Promocion(Search.Promocion pro)
         {
             try
             {
-                List<Promocion> promociones = new List<Promocion>();
-                Promocion p =  new Promocion();
+                List<Select.Promocion> promociones = new List<Select.Promocion>();
+                Select.Promocion p = new Select.Promocion();
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
@@ -133,7 +133,7 @@ namespace BARABARES_Services
 
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    p = Utils.promocion_parse(rows[i]);
+                    p = Utils.select_promocion_parse(rows[i]);
                     promociones.Add(p);
                 }
 
@@ -142,7 +142,7 @@ namespace BARABARES_Services
             }
             catch (Exception ex)
             {
-                Promocion d = new Promocion();
+                Select.Promocion d = new Select.Promocion();
 
                 LogBarabares b = new LogBarabares()
                 {
@@ -160,7 +160,7 @@ namespace BARABARES_Services
 
                 Utils.add_LogBarabares(b);
 
-                return new List<Promocion>();
+                return new List<Select.Promocion>();
             }
 
         }
@@ -276,6 +276,7 @@ namespace BARABARES_Services
                     sqlCmd.Parameters.Add("@ipbSemana", SqlDbType.Bit).Value = p.Semana;
                     sqlCmd.Parameters.Add("@ipnPrecioUnitario", SqlDbType.Real).Value = p.PrecioUnitario;
                     sqlCmd.Parameters.Add("@ipsImagen", SqlDbType.VarChar).Value = p.Imagen;
+                    sqlCmd.Parameters.Add("@ipnIdMoneda", SqlDbType.Int).Value = p.IdMoneda;
                     sqlCmd.Parameters.Add(flujo);
                     sqlCmd.Parameters.Add(mensaje);
 

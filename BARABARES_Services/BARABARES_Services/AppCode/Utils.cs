@@ -634,6 +634,22 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.Producto select_producto_parse(DataRow r)
+        {
+
+            Select.Producto p = new Select.Producto();
+            p.IdProducto = Int32.Parse(r["idProducto"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.Perecible = Boolean.Parse(r["perecible"].ToString());
+            p.PrecioUnitario = r["precioUnitario"].ToString();
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Presentacion = r["presentacion"].ToString();
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+
+            return p;
+        }
+
         public static Select.Producto_Web producto_web_parse(DataRow r)
         {
             Select.Producto_Web p = new Select.Producto_Web();
@@ -709,6 +725,20 @@ namespace BARABARES_Services.AppCode
             p.FechaFin = DateTime.ParseExact(r["fechaFin"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
             p.Imagen = r["imagen"].ToString();
             p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
+            p.Semana = Boolean.Parse(r["semana"].ToString());
+
+            return p;
+        }
+
+        public static Select.Promocion select_promocion_parse(DataRow r)
+        {
+            Select.Promocion p = new Select.Promocion();
+            p.IdPromocion = Int32.Parse(r["idPromocion"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.FechaInicio = DateTime.ParseExact(r["fechaInicio"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.FechaFin = DateTime.ParseExact(r["fechaFin"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Precio = r["precioUnitario"].ToString();
             p.Semana = Boolean.Parse(r["semana"].ToString());
 
             return p;

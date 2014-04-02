@@ -90,6 +90,72 @@ namespace BARABARES_Services
 
         }
 
+        public List<Moneda> combo_Moneda()
+        {
+            try
+            {
+                List<Moneda> moneda = new List<Moneda>();
+                Moneda m = new Moneda();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return moneda;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("MONEDA_COMBO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    m = Utils.moneda_parse(rows[i]);
+                    moneda.Add(m);
+                }
+
+                return moneda;
+            }
+            catch (Exception ex)
+            {
+                Moneda m = new Moneda();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.Combo_Moneda,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = m.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Moneda>();
+            }
+
+        }
+
         public ResponseBD add_Moneda(Moneda m)
         {
             try

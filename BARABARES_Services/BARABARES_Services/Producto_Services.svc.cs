@@ -85,12 +85,12 @@ namespace BARABARES_Services
 
         }
 
-        public List<Producto> selectByTipo_Producto(int idTipo)
+        public List<Select.Producto> selectByTipo_Producto(int idTipo)
         {
             try
             {
-                List<Producto> productos = new List<Producto>();
-                Producto p;
+                List<Select.Producto> productos = new List<Select.Producto>();
+                Select.Producto p;
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
@@ -123,7 +123,7 @@ namespace BARABARES_Services
 
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    p = Utils.producto_parse(rows[i]);
+                    p = Utils.select_producto_parse(rows[i]);
                     productos.Add(p);
                 }
 
@@ -131,7 +131,7 @@ namespace BARABARES_Services
             }
             catch (Exception ex)
             {
-                Producto p = new Producto();
+                Select.Producto p = new Select.Producto();
 
                 LogBarabares b = new LogBarabares()
                 {
@@ -149,7 +149,7 @@ namespace BARABARES_Services
 
                 Utils.add_LogBarabares(b);
 
-                return new List<Producto>();
+                return new List<Select.Producto>();
             }
 
         }
@@ -196,12 +196,12 @@ namespace BARABARES_Services
             return productos;
         }
 
-        public List<Producto> search_Producto(Search.Producto p)
+        public List<Select.Producto> search_Producto(Search.Producto p)
         {
             try
             {
-                List<Producto> productos = new List<Producto>();
-                Producto prd;
+                List<Select.Producto> productos = new List<Select.Producto>();
+                Select.Producto prd;
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
@@ -242,7 +242,7 @@ namespace BARABARES_Services
 
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    prd = Utils.producto_parse(rows[i]);
+                    prd = Utils.select_producto_parse(rows[i]);
                     productos.Add(prd);
                 }
 
@@ -250,7 +250,7 @@ namespace BARABARES_Services
             }
             catch (Exception ex)
             {
-                Producto prd = new Producto();
+                Select.Producto prd = new Select.Producto();
 
                 LogBarabares b = new LogBarabares()
                 {
@@ -268,7 +268,7 @@ namespace BARABARES_Services
 
                 Utils.add_LogBarabares(b);
 
-                return new List<Producto>();
+                return new List<Select.Producto>();
             }
 
         }
@@ -384,6 +384,7 @@ namespace BARABARES_Services
                     sqlCmd.Parameters.Add("@ipdFechaCreacion", SqlDbType.DateTime).Value = p.FechaCreacion;
                     sqlCmd.Parameters.Add("@ipnIdTipoProducto", SqlDbType.Int).Value = p.IdTipoProducto;
                     sqlCmd.Parameters.Add("@ipnIdUnidadProducto", SqlDbType.Int).Value = p.IdUnidadProducto;
+                    sqlCmd.Parameters.Add("@ipnIdMoneda", SqlDbType.Int).Value = p.IdMoneda;
                     sqlCmd.Parameters.Add("@ipsImagen", SqlDbType.VarChar).Value = p.Imagen;
                     sqlCmd.Parameters.Add("@ipnPresentacion", SqlDbType.Int).Value = p.Presentacion;
                     sqlCmd.Parameters.Add("@ipsObservaciones", SqlDbType.VarChar).Value = p.Observaciones;

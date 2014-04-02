@@ -15,7 +15,8 @@ namespace BARABARES_Services.DTO
         public DateTime FechaCreacion { get; set; }
         public DateTime UltimaModificacion { get; set; }
         public int IdTipoProducto { get; set; }
-        public int IdUnidadProducto{ get; set; }
+        public int IdUnidadProducto { get; set; }
+        public int IdMoneda { get; set; }
         public string Imagen { get; set; }
         public int Presentacion { get; set; }
         public string Observaciones { get; set; }

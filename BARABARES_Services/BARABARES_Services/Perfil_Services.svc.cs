@@ -239,6 +239,78 @@ namespace BARABARES_Services
             }
         }
 
+        public List<Perfil> selectByUsuario_Sistema_Perfil(string usuario)
+        {
+            try
+            {
+                List<Perfil> perfiles = new List<Perfil>();
+                Perfil p = new Perfil();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return perfiles;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PERFIL_SELECT_BY_USUARIO_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipsUsuario", SqlDbType.VarChar).Value = usuario;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = p.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.perfil_parse(rows[i]);
+                    perfiles.Add(p);
+                }
+
+                return perfiles;
+            }
+            catch (Exception ex)
+            {
+                Perfil p = new Perfil();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectByUsuario_Sistema_Perfil,
+                    Input = JsonSerializer.selectByUsuario_Sistema_Perfil(usuario),
+                    Descripcion = ex.ToString(),
+                    Clase = p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Perfil>();
+            }
+        }
+
         public Perfil selectById_Perfil(int id)
         {
             try

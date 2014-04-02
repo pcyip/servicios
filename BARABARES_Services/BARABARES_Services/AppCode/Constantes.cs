@@ -83,6 +83,7 @@ namespace BARABARES_Services.AppCode
 
         //Moneda
         public const string SelectAll_Moneda = "http://localhost:2576/Moneda_Services.svc/selectAll_Moneda";
+        public const string Combo_Moneda = "http://localhost:2576/Moneda_Services.svc/combo_Moneda";
         public const string Add_Moneda = "http://localhost:2576/Moneda_Services.svc/add_Moneda";
 
         //Movimiento
@@ -121,6 +122,7 @@ namespace BARABARES_Services.AppCode
         public const string SelectAll_Perfil = "http://localhost:2576/Perfil_Services.svc/selectAll_Perfil";
         public const string Search_Perfil = "http://localhost:2576/Perfil_Services.svc/search_Perfil";
         public const string SelectByUsuario_Perfil = "http://localhost:2576/Perfil_Services.svc/selectByUsuario_Perfil";
+        public const string SelectByUsuario_Sistema_Perfil = "http://localhost:2576/Perfil_Services.svc/selectByUsuario_Sistema_Perfil";
         public const string SelectById_Perfil = "http://localhost:2576/Perfil_Services.svc/selectById_Perfil";
         public const string Add_Perfil = "http://localhost:2576/Perfil_Services.svc/add_Perfil";
         public const string Add_PerfilXUsuario = "http://localhost:2576/Perfil_Services.svc/add_PerfilXUsuario";
