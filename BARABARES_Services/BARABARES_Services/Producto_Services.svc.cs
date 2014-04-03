@@ -342,6 +342,7 @@ namespace BARABARES_Services
 
         public ResponseBD add_Producto(Producto p)
         {
+            Debug.WriteLine("enjkdfhd");
             try
             {
                 ResponseBD response = new ResponseBD();
