@@ -583,6 +583,36 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.DetallePersona persona_sistema_parse(DataRow r)
+        {
+
+            Select.DetallePersona p = new Select.DetallePersona();
+            p.IdPersona = Int32.Parse(r["idPersona"].ToString());
+            p.Nombres = r["nombres"].ToString();
+            p.TipoDocumento = r["tipoDocumento"].ToString();
+            p.NumeroDocumento = Int32.Parse(r["numeroDocumento"].ToString());
+            p.Telefono = Int32.Parse(r["telefono"].ToString());
+            p.Celular = Int32.Parse(r["celular"].ToString());
+            p.Sexo = r["sexo"].ToString()[0];
+            p.FechaNacimiento = DateTime.ParseExact(r["fechaNacimiento"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Email = r["email"].ToString();
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.Usuario = r["usuario"].ToString();
+            p.TipoCalle = r["tipoCalle"].ToString();
+            p.Calle = r["calle"].ToString();
+            p.Numero = Int32.Parse(r["numero"].ToString());
+            p.Interior = r["interior"].ToString();
+            p.TipoUrb = r["tipoUrb"].ToString();
+            p.Urbanizacion = r["urbanizacion"].ToString();
+            p.Mzlt = r["mzlt"].ToString();
+            p.Referencia = r["referencia"].ToString();
+            p.Departamento = r["departamento"].ToString();
+            p.Provincia = r["provincia"].ToString();
+            p.Distrito = r["distrito"].ToString();
+
+            return p;
+        }
+
         public static TipoDocumento tipoDocumento_parse(DataRow r)
         {
             TipoDocumento t = new TipoDocumento();

@@ -218,6 +218,11 @@ namespace BARABARES_Services.AppCode
             return "{" + '"' + "idTipo" + '"' + ": " + idTipo.ToString() + "}";
         }
 
+        public static string selectById_Persona(int id)
+        {
+            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
+        }
+
         public static string add_Persona(Persona p)
         {
             return "{" +

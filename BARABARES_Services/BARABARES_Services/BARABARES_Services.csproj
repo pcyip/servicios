@@ -111,8 +111,8 @@
     <Compile Include="Vehiculo_Services.svc.cs">
       <DependentUpon>Vehiculo_Services.svc</DependentUpon>
     </Compile>
-    <Compile Include="Old_App_Code\BBSessionManager.cs" />
-    <Compile Include="Old_App_Code\Constants.cs" />
+    <Content Include="App_Code\BBSessionManager.cs" />
+    <Content Include="App_Code\Constants.cs" />
     <Compile Include="Almacen_Services.svc.cs">
       <DependentUpon>Almacen_Services.svc</DependentUpon>
     </Compile>

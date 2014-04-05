@@ -131,6 +131,7 @@ namespace BARABARES_Services.AppCode
         //Persona
         public const string SelectAll_Persona = "http://localhost:2576/Persona_Services.svc/selectAll_Persona";
         public const string SelectByTipo_Persona = "http://localhost:2576/Persona_Services.svc/selectByTipo_Persona";
+        public const string SelectById_Persona = "http://localhost:2576/Persona_Services.svc/selectById_Persona";
         public const string Search_Persona = "http://localhost:2576/Persona_Services.svc/search_Persona";
         public const string Add_Persona = "http://localhost:2576/Persona_Services.svc/add_Persona";
         public const string SelectAll_TipoDocumento = "http://localhost:2576/Persona_Services.svc/selectAll_TipoDocumento";

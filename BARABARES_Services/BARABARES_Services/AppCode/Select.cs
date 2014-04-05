@@ -108,7 +108,7 @@ namespace BARABARES_Services.AppCode
             public string Usuario { get; set; }
             public string TipoCalle { get; set; }
             public string Calle { get; set; }
-            public string Numero { get; set; }
+            public int Numero { get; set; }
             public string Interior { get; set; }
             public string TipoUrb { get; set; }
             public string Urbanizacion { get; set; }
