@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F834AA41-549D-49AF-9D31-65E5D14C246A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BARABARES_Services</RootNamespace>
+    <AssemblyName>BARABARES_Services</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Almacen_Services.svc" />
+    <Content Include="Carrito_Services.svc" />
+    <Content Include="Cliente_Services.svc" />
+    <Content Include="Comprobante_Services.svc" />
+    <Content Include="Contrasena_Services.svc" />
+    <Content Include="Direccion_Services.svc" />
+    <Content Include="Moneda_Services.svc" />
+    <Content Include="Movimiento_Services.svc" />
+    <Content Include="Parametro_Services.svc" />
+    <Content Include="Pedido_Services.svc" />
+    <Content Include="Perfil_Services.svc" />
+    <Content Include="Persona_Services.svc" />
+    <Content Include="Producto_Services.svc" />
+    <Content Include="Promocion_Services.svc" />
+    <Content Include="Rol_Services.svc" />
+    <Content Include="Tienda_Services.svc" />
+    <Content Include="Usuario_Services.svc" />
+    <Content Include="Vehiculo_Services.svc" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppCode\BBSessionManager.cs" />
+    <Compile Include="AppCode\Constants.cs" />
+    <Compile Include="AppCode\Constantes.cs" />
+    <Compile Include="AppCode\JsonSerializer.cs" />
+    <Compile Include="AppCode\Search.cs" />
+    <Compile Include="AppCode\Select.cs" />
+    <Compile Include="AppCode\SessionUser.cs" />
+    <Compile Include="AppCode\Utils.cs" />
+    <Compile Include="DTO\Carrito.cs" />
+    <Compile Include="DTO\DetalleCarrito.cs" />
+    <Compile Include="DTO\DetalleMovimiento.cs" />
+    <Compile Include="DTO\Direccion.cs" />
+    <Compile Include="DTO\LogBarabares.cs" />
+    <Compile Include="DTO\ParametrosSeguridad.cs" />
+    <Compile Include="DTO\ProductoXAlmacen.cs" />
+    <Compile Include="DTO\ResponseBD.cs" />
+    <Compile Include="DTO\Tienda.cs" />
+    <Compile Include="DTO\TipoComprobante.cs" />
+    <Compile Include="DTO\TipoUrb.cs" />
+    <Compile Include="DTO\UnidadProducto.cs" />
+    <Compile Include="IUsuario_Services.cs" />
+    <Compile Include="IVehiculo_Services.cs" />
+    <Compile Include="Tienda_Services.svc.cs">
+      <DependentUpon>Tienda_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Usuario_Services.svc.cs">
+      <DependentUpon>Usuario_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Vehiculo_Services.svc.cs">
+      <DependentUpon>Vehiculo_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Old_App_Code\BBSessionManager.cs" />
+    <Compile Include="Old_App_Code\Constants.cs" />
+    <Compile Include="Almacen_Services.svc.cs">
+      <DependentUpon>Almacen_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Carrito_Services.svc.cs">
+      <DependentUpon>Carrito_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Cliente_Services.svc.cs">
+      <DependentUpon>Cliente_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Comprobante_Services.svc.cs">
+      <DependentUpon>Comprobante_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Contrasena_Services.svc.cs">
+      <DependentUpon>Contrasena_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Direccion_Services.svc.cs">
+      <DependentUpon>Direccion_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="DTO\Almacen.cs" />
+    <Compile Include="DTO\Cliente.cs" />
+    <Compile Include="DTO\ComprobantePago.cs" />
+    <Compile Include="DTO\Contrasena.cs" />
+    <Compile Include="DTO\Departamento.cs" />
+    <Compile Include="DTO\DetalleComprobante.cs" />
+    <Compile Include="DTO\DetallePedido.cs" />
+    <Compile Include="DTO\DetallePromocion.cs" />
+    <Compile Include="DTO\Distrito.cs" />
+    <Compile Include="DTO\EstadoPedido.cs" />
+    <Compile Include="DTO\LogUsuario.cs" />
+    <Compile Include="DTO\MedioPago.cs" />
+    <Compile Include="DTO\Moneda.cs" />
+    <Compile Include="DTO\MotivoCancelacion.cs" />
+    <Compile Include="DTO\Movimiento.cs" />
+    <Compile Include="DTO\Parametro.cs" />
+    <Compile Include="DTO\Pedido.cs" />
+    <Compile Include="DTO\Perfil.cs" />
+    <Compile Include="DTO\PerfilXUsuario.cs" />
+    <Compile Include="DTO\Persona.cs" />
+    <Compile Include="DTO\Producto.cs" />
+    <Compile Include="DTO\ProductoXVehiculo.cs" />
+    <Compile Include="DTO\Promocion.cs" />
+    <Compile Include="DTO\Provincia.cs" />
+    <Compile Include="DTO\Rol.cs" />
+    <Compile Include="DTO\RolXPerfil.cs" />
+    <Compile Include="DTO\TipoCalle.cs" />
+    <Compile Include="DTO\TipoDocumento.cs" />
+    <Compile Include="DTO\TipoMovimiento.cs" />
+    <Compile Include="DTO\TipoPersona.cs" />
+    <Compile Include="DTO\TipoProducto.cs" />
+    <Compile Include="DTO\TipoTarjeta.cs" />
+    <Compile Include="DTO\Usuario.cs" />
+    <Compile Include="DTO\Vehiculo.cs" />
+    <Compile Include="IAlmacen_Services.cs" />
+    <Compile Include="ICarrito_Services.cs" />
+    <Compile Include="ICliente_Services.cs" />
+    <Compile Include="IComprobante_Services.cs" />
+    <Compile Include="IContrasena_Services.cs" />
+    <Compile Include="IDireccion_Services.cs" />
+    <Compile Include="IMoneda_Services.cs" />
+    <Compile Include="IMovimiento_Services.cs" />
+    <Compile Include="IParametro_Services.cs" />
+    <Compile Include="IPedido_Services.cs" />
+    <Compile Include="IPerfil_Services.cs" />
+    <Compile Include="IPersona_Services.cs" />
+    <Compile Include="IProducto_Services.cs" />
+    <Compile Include="IPromocion_Services.cs" />
+    <Compile Include="IRol_Services.cs" />
+    <Compile Include="ITienda_Services.cs" />
+    <Compile Include="Moneda_Services.svc.cs">
+      <DependentUpon>Moneda_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Movimiento_Services.svc.cs">
+      <DependentUpon>Movimiento_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Parametro_Services.svc.cs">
+      <DependentUpon>Parametro_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Pedido_Services.svc.cs">
+      <DependentUpon>Pedido_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Perfil_Services.svc.cs">
+      <DependentUpon>Perfil_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Persona_Services.svc.cs">
+      <DependentUpon>Persona_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Producto_Services.svc.cs">
+      <DependentUpon>Producto_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Promocion_Services.svc.cs">
+      <DependentUpon>Promocion_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Rol_Services.svc.cs">
+      <DependentUpon>Rol_Services.svc</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>5434</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:2576/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
