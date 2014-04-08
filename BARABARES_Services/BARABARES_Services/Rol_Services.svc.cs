@@ -85,6 +85,78 @@ namespace BARABARES_Services
 
         }
 
+        public List<Select.Rol_Perfil> selectByPerfil_Rol(int id)
+        {
+            try
+            {
+                List<Select.Rol_Perfil> roles = new List<Select.Rol_Perfil>();
+                Select.Rol_Perfil r = new Select.Rol_Perfil();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return roles;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("ROL_SELECT_BY_PERFIL", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdPerfil", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = r.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    r = Utils.rol_perfil_parse(rows[i]);
+                    roles.Add(r);
+                }
+
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                Select.Rol_Perfil r = new Select.Rol_Perfil();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectByPerfil_Rol,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = r.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.Rol_Perfil>();
+            }
+
+        }
+
         public Rol selectById_Rol(int id)
         {
             try
@@ -135,7 +207,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectById_Rol,
-                    Input = JsonSerializer.selectById_Rol(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = r.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,

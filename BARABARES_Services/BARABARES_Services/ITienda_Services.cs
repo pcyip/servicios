@@ -25,6 +25,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectById_Tienda")]
+        Select.Tienda_Sistema selectById_Tienda(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "combo_Tienda")]
         List<Tienda> combo_Tienda();
 

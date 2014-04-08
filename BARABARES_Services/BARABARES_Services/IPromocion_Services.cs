@@ -23,6 +23,13 @@ namespace BARABARES_Services
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectById_Sistema_Promocion")]
+        Select.Promocion_Sistema selectById_Sistema_Promocion(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "search_Promocion")]
@@ -34,6 +41,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "semana_Promocion")]
         List<Select.PromocionSemana> semana_Promocion();
+
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+            BodyStyle = WebMessageBodyStyle.Bare,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "semana_WEB_Promocion")]
+        Select.Promocion_Web semana_WEB_Promocion();
 
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -51,6 +65,13 @@ namespace BARABARES_Services
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectByPromo_Sistema_DetallePromocion")]
+        List<Select.DetallePromocion_Sistema> selectByPromo_Sistema_DetallePromocion(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             UriTemplate = "add_DetallePromocion")]
@@ -60,8 +81,8 @@ namespace BARABARES_Services
         [WebInvoke(Method = "GET",
             BodyStyle= WebMessageBodyStyle.Bare,
             ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "list_web_Promocion")]
-        List<Select.Promocion_Web> list_web_Promocion();
+            UriTemplate = "list_WEB_Promocion")]
+        List<Select.Promocion_Web> list_WEB_Promocion();
         
     }
 }

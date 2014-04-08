@@ -19,6 +19,151 @@ namespace BARABARES_Services
     {
         #region Usuario
 
+        public ResponseBD actualizarInventario_Usuario(int idUsuario, int idProducto, int cantidad)
+        {
+            ResponseBD response = null;
+            int result;
+
+            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            {
+                bool open = false;
+                try
+                {
+                    SqlConn.Open();
+                    open = true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                    response.Flujo = Constantes.FALLA;
+                    response.Mensaje = "Error al abrir la conexión a BD";
+                }
+
+                if (open)
+                {
+                    SqlCommand sqlCmd = new SqlCommand("USUARIO_ACTUALIZAR_INVENTARIO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = idUsuario;
+                    sqlCmd.Parameters.Add("@ipnIdProducto", SqlDbType.Int).Value = idProducto;
+                    sqlCmd.Parameters.Add("@ipnCantidad", SqlDbType.Int).Value = cantidad;
+
+                    var returnParameter = sqlCmd.Parameters.Add("@returnVal", SqlDbType.Int);
+                    returnParameter.Direction = ParameterDirection.ReturnValue;
+
+                    sqlCmd.ExecuteNonQuery();
+                    result = Int32.Parse(returnParameter.Value.ToString());
+
+                    response = new ResponseBD();
+                    if (result > 0)
+                    {
+                        response.Flujo = Constantes.OK;
+                        response.Mensaje = Constantes.ACTUALIZACION_INVENTARIO_OK;
+                    }
+                    else
+                    {
+                        response.Flujo = Constantes.ERROR;
+                        response.Mensaje = Constantes.ACTUALIZACION_INVENTARIO_ERROR;
+                    }
+                    
+                    SqlConn.Close();
+                }
+            }
+
+            return response;
+        }
+
+        public List<ProductoInventario> inventario_Usuario(int idUsuario)
+        {
+            List<ProductoInventario> inventarioUsuario = null;
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter sda = new SqlDataAdapter();
+            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            {
+                bool open = false;
+                try
+                {
+                    SqlConn.Open();
+                    open = true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+                if (open)
+                {
+                    SqlCommand sqlCmd = new SqlCommand("USUARIO_INVENTARIO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = idUsuario;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+
+                    DataRow[] rows = dt.Select();
+
+                    if (rows != null)
+                    {
+                        inventarioUsuario = new List<ProductoInventario>();
+                        ProductoInventario producto;
+                        for (int i = 0; i < rows.Count(); i++ )
+                        {
+                            producto = Utils.usuario_inventario_parse(rows[i]);
+                            inventarioUsuario.Add(producto);
+                        }
+                    }
+                }
+            }
+
+            return inventarioUsuario;
+        }
+
+        public UsuarioPersonalInfo personalInfo_Usuario(int idUsuario)
+        {
+            UsuarioPersonalInfo infoUsuario = null;
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter sda = new SqlDataAdapter();
+            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            {
+                bool open = false;
+                try
+                {
+                    SqlConn.Open();
+                    open = true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+                if (open)
+                {
+                    SqlCommand sqlCmd = new SqlCommand("USUARIO_INFORMACION", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@idUsuario", SqlDbType.Int).Value = idUsuario;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+
+                    DataRow[] rows = dt.Select();
+                    infoUsuario = Utils.usuario_information_parse(rows[0]);
+                }
+            }
+
+            return infoUsuario;
+        }
+
         public List<Usuario> selectAll_Usuario()
         {
             try
@@ -81,6 +226,76 @@ namespace BARABARES_Services
                 Utils.add_LogBarabares(b);
 
                 return new List<Usuario>();
+            }
+
+        }
+
+        public Select.Usuario_Sistema selectById_Usuario(int id)
+        {
+            try
+            {
+                Select.Usuario_Sistema u =  new Select.Usuario_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return u;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("USUARIO_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = u.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    u = Utils.usuario_sistema_parse(rows[i]);
+                }
+
+                return u;
+            }
+            catch (Exception ex)
+            {
+                Select.Usuario_Sistema d = new Select.Usuario_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectAll_Usuario,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new Select.Usuario_Sistema();
             }
 
         }

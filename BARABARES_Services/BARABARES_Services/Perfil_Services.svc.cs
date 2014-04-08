@@ -167,12 +167,12 @@ namespace BARABARES_Services
 
         }
 
-        public List<Perfil> selectByUsuario_Perfil(int id)
+        public List<Select.Perfil_Usuario> selectByUsuario_Perfil(int id)
         {
             try
             {
-                List<Perfil> perfiles = new List<Perfil>();
-                Perfil p = new Perfil();
+                List<Select.Perfil_Usuario> perfiles = new List<Select.Perfil_Usuario>();
+                Select.Perfil_Usuario p = new Select.Perfil_Usuario();
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
@@ -209,7 +209,7 @@ namespace BARABARES_Services
 
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    p = Utils.perfil_parse(rows[i]);
+                    p = Utils.perfil_usuario_parse(rows[i]);
                     perfiles.Add(p);
                 }
 
@@ -217,13 +217,13 @@ namespace BARABARES_Services
             }
             catch (Exception ex)
             {
-                Perfil p = new Perfil();
+                Select.Perfil_Usuario p = new Select.Perfil_Usuario();
 
                 LogBarabares b = new LogBarabares()
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByUsuario_Perfil,
-                    Input = JsonSerializer.selectByUsuario_Perfil(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = p.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
@@ -235,7 +235,7 @@ namespace BARABARES_Services
 
                 Utils.add_LogBarabares(b);
 
-                return new List<Perfil>();
+                return new List<Select.Perfil_Usuario>();
             }
         }
 
@@ -365,7 +365,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectById_Perfil,
-                    Input = JsonSerializer.selectById_Perfil(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = p.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,

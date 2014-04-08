@@ -89,6 +89,10 @@
     <Compile Include="AppCode\SessionUser.cs" />
     <Compile Include="AppCode\Utils.cs" />
     <Compile Include="DTO\Carrito.cs" />
+    <Compile Include="DTO\PedidoUsuario.cs" />
+    <Compile Include="DTO\ProductoInventario.cs" />
+    <Compile Include="DTO\ProductoPedido.cs" />
+    <Compile Include="DTO\UsuarioPersonalInfo.cs" />
     <Compile Include="DTO\DetalleCarrito.cs" />
     <Compile Include="DTO\DetalleMovimiento.cs" />
     <Compile Include="DTO\Direccion.cs" />

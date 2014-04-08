@@ -137,7 +137,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByTipo_Persona,
-                    Input = JsonSerializer.selectByTipo_Persona(idTipo),
+                    Input = JsonSerializer.selectByTipo(idTipo),
                     Descripcion = ex.ToString(),
                     Clase = p.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
@@ -154,11 +154,11 @@ namespace BARABARES_Services
 
         }
 
-        public Select.DetallePersona selectById_Persona(int id)
+        public Select.Persona_Sistema selectById_Persona(int id)
         {
             try
             {
-                Select.DetallePersona p = new Select.DetallePersona();
+                Select.Persona_Sistema p = new Select.Persona_Sistema();
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sda = new SqlDataAdapter();
@@ -208,7 +208,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectById_Persona,
-                    Input = JsonSerializer.selectById_Persona(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = p.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
@@ -220,7 +220,7 @@ namespace BARABARES_Services
 
                 Utils.add_LogBarabares(b);
 
-                return new Select.DetallePersona();
+                return new Select.Persona_Sistema();
             }
 
         }

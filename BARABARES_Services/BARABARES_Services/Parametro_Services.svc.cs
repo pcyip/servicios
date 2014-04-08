@@ -233,7 +233,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByPadre_Parametro,
-                    Input = JsonSerializer.selectByPadre_Parametro(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = p.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,

@@ -85,6 +85,77 @@ namespace BARABARES_Services
 
         }
 
+        public Select.Tienda_Sistema selectById_Tienda(int id)
+        {
+            try
+            {
+                Select.Tienda_Sistema t = new Select.Tienda_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return t;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("TIENDA_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdTienda", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = t.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    t = Utils.tienda_sistema_parse(rows[i]);
+                }
+
+                return t;
+            }
+            catch (Exception ex)
+            {
+                Select.Tienda_Sistema t = new Select.Tienda_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectById_Tienda,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = t.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new Select.Tienda_Sistema();
+            }
+
+        }
+
         public List<Tienda> combo_Tienda()
         {
             try

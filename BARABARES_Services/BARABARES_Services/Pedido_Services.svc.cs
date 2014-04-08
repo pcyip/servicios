@@ -19,6 +19,49 @@ namespace BARABARES_Services
     {
         #region Pedido
 
+        public List<PedidoUsuario> usuario_Pedido(int idUsuario)
+        {
+            List<PedidoUsuario> pedidos = null;
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter sda = new SqlDataAdapter();
+            string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+            using (SqlConnection SqlConn = new SqlConnection(ConnString))
+            {
+                bool open = false;
+                try
+                {
+                    SqlConn.Open();
+                    open = true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+
+                if (open)
+                {
+                    SqlCommand sqlCmd = new SqlCommand("PEDIDO_USUARIO", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdUsuario", SqlDbType.Int).Value = idUsuario;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+
+                    DataRow[] rows = dt.Select();
+
+                    if (rows != null)
+                        pedidos = Utils.usuario_pedido_parse(rows);
+                }
+            }
+
+            return pedidos;
+        }
+
         public List<Pedido> selectAll_Pedido()
         {
             try
@@ -86,6 +129,77 @@ namespace BARABARES_Services
                 Utils.add_LogBarabares(b);
 
                 return new List<Pedido>();
+            }
+
+        }
+
+        public Select.Pedido_Sistema selectById_Pedido(int id)
+        {
+            try
+            {
+                Select.Pedido_Sistema p = new Select.Pedido_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return p;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PEDIDO_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdPedido", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = p.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.pedido_sistema_parse(rows[i]);
+                }
+
+                return p;
+            }
+            catch (Exception ex)
+            {
+                Select.Pedido_Sistema p = new Select.Pedido_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectById_Pedido,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = p.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new Select.Pedido_Sistema();
             }
 
         }
@@ -410,6 +524,79 @@ namespace BARABARES_Services
                 Utils.add_LogBarabares(b);
 
                 return new List<DetallePedido>();
+            }
+
+        }
+
+        public List<Select.DetallePedido_Sistema> selectByPedido_DetallePedido(int id)
+        {
+            try
+            {
+                List<Select.DetallePedido_Sistema> detallePedidos = new List<Select.DetallePedido_Sistema>();
+                Select.DetallePedido_Sistema d = new Select.DetallePedido_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return detallePedidos;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PEDIDO_DETALLE_SELECT_BY_PED_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdPedido", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = d.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    d = Utils.detallePedido_sistema_parse(rows[i]);
+                    detallePedidos.Add(d);
+                }
+
+                return detallePedidos;
+            }
+            catch (Exception ex)
+            {
+                Select.DetallePedido_Sistema d = new Select.DetallePedido_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectByPedido_DetallePedido,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.DetallePedido_Sistema>();
             }
 
         }

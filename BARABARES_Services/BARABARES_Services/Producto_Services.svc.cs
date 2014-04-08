@@ -137,7 +137,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByTipo_Producto,
-                    Input = "",
+                    Input = JsonSerializer.selectByTipo(idTipo),
                     Descripcion = ex.ToString(),
                     Clase = p.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
@@ -154,7 +154,7 @@ namespace BARABARES_Services
 
         }
 
-        public List<Select.Producto_Web> selectByTipo_Web_Producto(string idTipo)
+        public List<Select.Producto_Web> selectByTipo_WEB_Producto(string idTipo)
         {
             List<Select.Producto_Web> productos = new List<Select.Producto_Web>();
             Select.Producto_Web p;
@@ -323,7 +323,150 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectById_Producto,
-                    Input = JsonSerializer.selectById_Producto(id),
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = prd.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return prd;
+            }
+
+        }
+
+        public Select.Producto_Sistema selectById_Sistema_Producto(int id)
+        {
+            try
+            {
+                Select.Producto_Sistema p = new Select.Producto_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return p;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdProducto", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = p.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.producto_sistema_parse(rows[i]);
+                }
+
+                return p;
+            }
+            catch (Exception ex)
+            {
+                Select.Producto_Sistema prd = new Select.Producto_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectById_Sistema_Producto,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = prd.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return prd;
+            }
+
+        }
+
+        public Select.DetalleProducto_Web selectById_WEB_Producto(string idprod)
+        {
+            int id = Int32.Parse(idprod);
+            try
+            {
+                Select.DetalleProducto_Web p = new Select.DetalleProducto_Web();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return p;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PRODUCTO_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdProducto", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = p.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.detalleproducto_web_parse(rows[i]);
+                }
+
+                return p;
+            }
+            catch (Exception ex)
+            {
+                Select.DetalleProducto_Web prd = new Select.DetalleProducto_Web();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectById_Sistema_Producto,
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = prd.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
@@ -342,7 +485,6 @@ namespace BARABARES_Services
 
         public ResponseBD add_Producto(Producto p)
         {
-            Debug.WriteLine("enjkdfhd");
             try
             {
                 ResponseBD response = new ResponseBD();

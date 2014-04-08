@@ -86,6 +86,78 @@ namespace BARABARES_Services
 
         }
 
+        public Select.Promocion_Sistema selectById_Sistema_Promocion(int id)
+        {
+            try
+            {
+                Select.Promocion_Sistema p =  new Select.Promocion_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return p;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PROMOCION_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdPromocion", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = p.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    p = Utils.promocion_sistema_parse(rows[i]);
+                }
+
+                return p;
+
+            }
+            catch (Exception ex)
+            {
+                Select.Promocion d = new Select.Promocion();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectById_Sistema_Promocion,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new Select.Promocion_Sistema();
+            }
+
+        }
+
         public List<Select.Promocion> search_Promocion(Search.Promocion pro)
         {
             try
@@ -230,6 +302,103 @@ namespace BARABARES_Services
                 return new List<Select.PromocionSemana>();
             }
 
+        }
+
+        public Select.Promocion_Web semana_WEB_Promocion()
+        {
+            try
+            {
+                Select.Promocion_Web promocion = new Select.Promocion_Web();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return promocion;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PROMOCION_SEMANA_WEB", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+                DataRow[] rows2;
+
+                //rows.Length = 1
+                if (rows.Length > 0)
+                {
+                    promocion = Utils.promocion_web_parse(rows[0]);
+
+                    Select.DetallePromocion_Web dpw;
+
+                    dt = null;
+                    sda = null;
+                    dt = new DataTable();
+                    sda = new SqlDataAdapter();
+
+                    using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                    {
+                        SqlConn.Open();
+                        SqlCommand sqlCmd = new SqlCommand("PROMOCION_DETALLE_LIST_WEB", SqlConn);
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                        sqlCmd.Parameters.Add("@ipnIdPromocion", SqlDbType.Int).Value = promocion.IdPromocion;
+
+                        sda.SelectCommand = sqlCmd;
+                        sda.Fill(dt);
+                        SqlConn.Close();
+                        sqlCmd.Dispose();
+                        sda.Dispose();
+                    }
+
+                    rows2 = null;
+                    rows2 = dt.Select();
+
+                    for (int j = 0; j < rows2.Length; j++)
+                    {
+                        dpw = Utils.detallePromocion_Web_parse(rows2[j]);
+                        promocion.Detalle.Add(dpw);
+                    }
+
+                }
+
+                return promocion;
+            }
+            catch (Exception ex)
+            {
+                Select.Promocion_Web d = new Select.Promocion_Web();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.List_web_Promocion,
+                    Input = "",
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new Select.Promocion_Web();
+            }
         }
 
         public ResponseBD add_Promocion(Promocion p)
@@ -386,6 +555,79 @@ namespace BARABARES_Services
 
         }
 
+        public List<Select.DetallePromocion_Sistema> selectByPromo_Sistema_DetallePromocion(int id)
+        {
+            try
+            {
+                List<Select.DetallePromocion_Sistema> detallePromociones = new List<Select.DetallePromocion_Sistema>();
+                Select.DetallePromocion_Sistema d = new Select.DetallePromocion_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return detallePromociones;
+                    }
+
+                    SqlCommand sqlCmd = new SqlCommand("PROMOCION_DETALLE_SELECT_BY_PROMO_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdPromocion", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = d.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    d = Utils.detallePromocion_sistema_parse(rows[i]);
+                    detallePromociones.Add(d);
+                }
+
+                return detallePromociones;
+            }
+            catch (Exception ex)
+            {
+                Select.DetallePromocion_Sistema d = new Select.DetallePromocion_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SselectByPromo_Sistema_DetallePromocion,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.DetallePromocion_Sistema>();
+            }
+
+        }
+
         public ResponseBD add_DetallePromocion(DetallePromocion d)
         {
             try
@@ -466,7 +708,7 @@ namespace BARABARES_Services
             }
         }
 
-        public List<Select.Promocion_Web> list_web_Promocion()
+        public List<Select.Promocion_Web> list_WEB_Promocion()
         {
             try
             {
@@ -499,7 +741,6 @@ namespace BARABARES_Services
 
                 DataRow[] rows = dt.Select();
                 DataRow[] rows2;
-                Debug.WriteLine("rows " + rows.Length);
 
                 for (int i = 0; i < rows.Length; i++)
                 {

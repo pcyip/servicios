@@ -90,6 +90,77 @@ namespace BARABARES_Services
 
         }
 
+        public Select.ComprobantePago_Sistema selectById_Comprobante(int id)
+        {
+            try
+            {
+                Select.ComprobantePago_Sistema c = new Select.ComprobantePago_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return c;
+                    }
+                    SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_PAGO_SELECT_BY_ID_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdComprobante", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = c.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    c = Utils.comprobante_sistema_parse(rows[i]);
+                }
+
+
+                return c;
+            }
+            catch (Exception ex)
+            {
+                Select.ComprobantePago_Sistema c = new Select.ComprobantePago_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectById_Comprobante,
+                    Input = JsonSerializer.selectById(id), //TODO
+                    Descripcion = ex.ToString(),
+                    Clase = c.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new Select.ComprobantePago_Sistema();
+            }
+
+        }
+
         public List<Select.ComprobantePago> list_Comprobante()
         {
             try
@@ -402,6 +473,78 @@ namespace BARABARES_Services
                 Utils.add_LogBarabares(b);
 
                 return new List<DetalleComprobante>();
+            }
+        }
+
+        public List<Select.DetalleComprobante_Sistema> selectByComprobante_DetalleComprobante(int id)
+        {
+            try
+            {
+                List<Select.DetalleComprobante_Sistema> detalleComprobantes = new List<Select.DetalleComprobante_Sistema>();
+                Select.DetalleComprobante_Sistema d = new Select.DetalleComprobante_Sistema();
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                string ConnString = ConfigurationManager.ConnectionStrings["barabaresConnectionString"].ConnectionString;
+                using (SqlConnection SqlConn = new SqlConnection(ConnString))
+                {
+                    try
+                    {
+                        SqlConn.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                        return detalleComprobantes;
+                    }
+                    SqlCommand sqlCmd = new SqlCommand("COMPROBANTE_DETALLE_SELECT_BY_COM_SISTEMA", SqlConn);
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.Add("@ipnIdComprobante", SqlDbType.Int).Value = id;
+
+                    sqlCmd.Parameters.Add("@ipsAccion", SqlDbType.VarChar).Value = Constantes.LOG_LISTAR;
+                    sqlCmd.Parameters.Add("@ipsClase", SqlDbType.VarChar).Value = d.GetType().Name;
+                    sqlCmd.Parameters.Add("@ipnIdUsuarioLog", SqlDbType.Int).Value = 1;
+
+                    sda.SelectCommand = sqlCmd;
+                    sda.Fill(dt);
+                    SqlConn.Close();
+                    sqlCmd.Dispose();
+                    sda.Dispose();
+                }
+
+                DataRow[] rows = dt.Select();
+
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    d = Utils.detalleComprobante_sistema_parse(rows[i]);
+                    detalleComprobantes.Add(d);
+                }
+
+
+                return detalleComprobantes;
+            }
+            catch (Exception ex)
+            {
+                Select.DetalleComprobante_Sistema d = new Select.DetalleComprobante_Sistema();
+
+                LogBarabares b = new LogBarabares()
+                {
+                    Accion = Constantes.LOG_LISTAR,
+                    Servicio = Constantes.SelectByComprobante_DetalleComprobante,
+                    Input = JsonSerializer.selectById(id),
+                    Descripcion = ex.ToString(),
+                    Clase = d.GetType().Name,
+                    Aplicacion = Constantes.ENTORNO_SERVICIOS,
+                    Estado = Constantes.FALLA,
+                    Ip = "",
+                    IdUsuario = 1 //TODO: obtener usuario de la sesión
+
+                };
+
+                Utils.add_LogBarabares(b);
+
+                return new List<Select.DetalleComprobante_Sistema>();
             }
         }
 

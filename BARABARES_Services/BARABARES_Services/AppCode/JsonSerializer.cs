@@ -8,6 +8,20 @@ namespace BARABARES_Services.AppCode
 {
     public class JsonSerializer
     {
+        #region Generic
+
+        public static string selectById(int id)
+        {
+            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
+        }
+
+        public static string selectByTipo(int idTipo)
+        {
+            return "{" + '"' + "idTipo" + '"' + ": " + idTipo.ToString() + "}";
+        }
+
+        #endregion
+
         #region Almacen
 
         public static string add_Almacen(Almacen d)
@@ -80,16 +94,6 @@ namespace BARABARES_Services.AppCode
 
         #region Direccion
 
-        public static string selectByDepartamento_Provincia(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
-
-        public static string selectByProvincia_Distrito(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
-
         public static string add_Direccion(Direccion d)
         {
             return "{" +
@@ -134,11 +138,6 @@ namespace BARABARES_Services.AppCode
 
         #region Parametro
 
-        public static string selectByPadre_Parametro(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
-
         #endregion
 
         #region Pedido
@@ -163,19 +162,9 @@ namespace BARABARES_Services.AppCode
 
         #region Perfil
 
-        public static string selectByUsuario_Perfil(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
-
         public static string selectByUsuario_Sistema_Perfil(string usuario)
         {
             return "{" + '"' + "usuario" + '"' + ": " + '"' + usuario + '"' + "}";
-        }
-
-        public static string selectById_Perfil(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
         }
 
         public static string add_Perfil(Perfil d)
@@ -212,16 +201,6 @@ namespace BARABARES_Services.AppCode
         #endregion
 
         #region Persona
-
-        public static string selectByTipo_Persona(int idTipo)
-        {
-            return "{" + '"' + "idTipo" + '"' + ": " + idTipo.ToString() + "}";
-        }
-
-        public static string selectById_Persona(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
 
         public static string add_Persona(Persona p)
         {
@@ -262,16 +241,6 @@ namespace BARABARES_Services.AppCode
         #endregion
 
         #region Producto
-
-        public static string selectById_Producto(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
-
-        public static string selectByTipo_Producto(int idTipo)
-        {
-            return "{" + '"' + "idTipo" + '"' + ": " + idTipo.ToString() + "}";
-        }
 
         public static string add_Producto(Producto d)
         {
@@ -357,11 +326,6 @@ namespace BARABARES_Services.AppCode
         #endregion
 
         #region Rol
-
-        public static string selectById_Rol(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
 
         public static string add_RolXPerfil(RolXPerfil d)
         {
@@ -459,11 +423,6 @@ namespace BARABARES_Services.AppCode
         #endregion
 
         #region Vehiculo
-
-        public static string selectByMarca_Modelo(int id)
-        {
-            return "{" + '"' + "id" + '"' + ": " + id.ToString() + "}";
-        }
 
         public static string add_Vehiculo(Vehiculo d)
         {

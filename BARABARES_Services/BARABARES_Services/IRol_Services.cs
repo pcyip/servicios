@@ -1,4 +1,5 @@
-﻿using BARABARES_Services.DTO;
+﻿using BARABARES_Services.AppCode;
+using BARABARES_Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectById_Rol")]
         Rol selectById_Rol(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectByPerfil_Rol")]
+        List<Select.Rol_Perfil> selectByPerfil_Rol(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

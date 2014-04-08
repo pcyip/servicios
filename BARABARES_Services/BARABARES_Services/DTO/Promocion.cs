@@ -16,5 +16,6 @@ namespace BARABARES_Services.DTO
         public bool Semana { get; set; }
         public double PrecioUnitario { get; set; }
         public int IdMoneda { get; set; }
+        public string Observaciones { get; set; }
     }
 }

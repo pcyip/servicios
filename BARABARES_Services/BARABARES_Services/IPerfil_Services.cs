@@ -33,7 +33,7 @@ namespace BARABARES_Services
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectByUsuario_Perfil")]
-        List<Perfil> selectByUsuario_Perfil(int id);
+        List<Select.Perfil_Usuario> selectByUsuario_Perfil(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

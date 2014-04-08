@@ -461,7 +461,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByDepartamento_Provincia,
-                    Input = JsonSerializer.selectByDepartamento_Provincia(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = d.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,
@@ -685,7 +685,7 @@ namespace BARABARES_Services
                 {
                     Accion = Constantes.LOG_LISTAR,
                     Servicio = Constantes.SelectByProvincia_Distrito,
-                    Input = JsonSerializer.selectByProvincia_Distrito(id),
+                    Input = JsonSerializer.selectById(id),
                     Descripcion = ex.ToString(),
                     Clase = d.GetType().Name,
                     Aplicacion = Constantes.ENTORNO_SERVICIOS,

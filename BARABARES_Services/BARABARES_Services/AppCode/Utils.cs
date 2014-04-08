@@ -65,6 +65,33 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.Almacen_Sistema almacen_sistema_parse(DataRow r)
+        {
+
+            Select.Almacen_Sistema p = new Select.Almacen_Sistema();
+            p.IdAlmacen = Int32.Parse(r["idAlmacen"].ToString());
+            p.Descripcion = r["descripcion"].ToString();
+            p.Tienda = r["tienda"].ToString();
+            p.Capacidad = Int32.Parse(r["capacidad"].ToString());
+            p.Area = Double.Parse(r["area"].ToString());
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.UltimaModificacion = DateTime.ParseExact(r["ultimaModificacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.TipoCalle = r["tipoCalle"].ToString();
+            p.Calle = r["calle"].ToString();
+            p.Numero = Int32.Parse(r["numero"].ToString());
+            p.Interior = r["interior"].ToString();
+            p.TipoUrb = r["tipoUrb"].ToString();
+            p.Urbanizacion = r["urbanizacion"].ToString();
+            p.Mzlt = r["mzlt"].ToString();
+            p.Referencia = r["referencia"].ToString();
+            p.Departamento = r["departamento"].ToString();
+            p.Provincia = r["provincia"].ToString();
+            p.Distrito = r["distrito"].ToString();
+
+            return p;
+        }
+
         #endregion
 
         #region Carrito
@@ -129,6 +156,28 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.ComprobantePago_Sistema comprobante_sistema_parse(DataRow r)
+        {
+            Select.ComprobantePago_Sistema p = new Select.ComprobantePago_Sistema();
+            p.IdComprobante = Int32.Parse(r["idComprobantePago"].ToString());
+            p.Numero = Int32.Parse(r["numero"].ToString());
+            p.IdPedido = Int32.Parse(r["idPedido"].ToString());
+            p.Documento = r["documento"].ToString();
+            p.Cliente = r["cliente"].ToString();
+            p.Direccion = r["direccion"].ToString();
+            p.TipoComprobante = r["tipoComprobante"].ToString();
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Medio = r["medioPago"].ToString();
+            p.Tarjeta = r["tipoTarjeta"].ToString();
+            p.Moneda = r["moneda"].ToString();
+            p.Total = Double.Parse(r["total"].ToString());
+            p.Usuario = r["usuario"].ToString();
+            p.Almacen = r["almacen"].ToString();
+            p.Tienda = r["tienda"].ToString();
+
+            return p;
+        }        
+
         public static DetalleComprobante detalleComprobante_parse(DataRow r)
         {
             DetalleComprobante d = new DetalleComprobante();
@@ -138,6 +187,20 @@ namespace BARABARES_Services.AppCode
             d.IdProducto = Int32.Parse(r["idProducto"].ToString());
             d.IdPromocion = Int32.Parse(r["idPromcion"].ToString());
             d.IdComprobantePago = Int32.Parse(r["idComprobantePago"].ToString());
+
+            return d;
+        }
+
+        public static Select.DetalleComprobante_Sistema detalleComprobante_sistema_parse(DataRow r)
+        {
+            Select.DetalleComprobante_Sistema d = new Select.DetalleComprobante_Sistema();
+            d.IdDetalleComprobante = Int32.Parse(r["idDetalleComprobante"].ToString());
+            d.Nombre = r["nombre"].ToString();
+            d.Descripcion = r["descripcion"].ToString();
+            d.Presentacion = r["presentacion"].ToString();
+            d.PrecioUnitario = r["precioUnitario"].ToString();
+            d.Cantidad = Int32.Parse(r["cantidad"].ToString());
+            d.Subtotal = r["subtotal"].ToString();
 
             return d;
         }
@@ -431,6 +494,50 @@ namespace BARABARES_Services.AppCode
 
         #region Pedido
 
+        public static List<PedidoUsuario> usuario_pedido_parse(DataRow[] rowCollection)
+        {
+            List<PedidoUsuario> pedidos = new List<PedidoUsuario>();
+            PedidoUsuario pedido;
+            ProductoPedido producto;
+            int i = 0;
+            DataRow row;
+            int nextPedido;
+
+            while (i < rowCollection.Count())
+            {
+                row = rowCollection[i];
+                pedido = new PedidoUsuario();
+                pedido.IdPedido = Int32.Parse(row["idPedido"].ToString());
+                pedido.MontoCobrar = Int32.Parse(row["total"].ToString());
+                pedido.MontoPagar = Int32.Parse(row["cuantoPaga"].ToString());
+                pedido.MontoVuelto = Int32.Parse(row["vuelto"].ToString());
+                pedido.Productos = new List<ProductoPedido>();
+
+                do
+                {
+                    producto = new ProductoPedido();
+                    producto.Nombre = row["nombre"].ToString();
+                    producto.Precio = Int32.Parse(row["precioUnitario"].ToString());
+                    producto.Cantidad = Int32.Parse(row["cantidad"].ToString());
+                    pedido.Productos.Add(producto);
+
+                    i++;
+                    if (i < rowCollection.Count())
+                    {
+                        row = rowCollection[i];
+                        nextPedido = Int32.Parse(row["idPedido"].ToString());
+                    }
+                    else
+                        break;
+                }
+                while (nextPedido == pedido.IdPedido);
+
+                pedidos.Add(pedido);
+            }
+
+            return pedidos;
+        }
+
         public static Pedido pedido_parse(DataRow r)
         {
             Pedido p = new Pedido();
@@ -461,12 +568,37 @@ namespace BARABARES_Services.AppCode
             p.Cliente = r["Cliente"].ToString();
             p.Estado = r["Estado"].ToString();
             p.Fecha = DateTime.ParseExact(r["Fecha"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
-            p.Total = Double.Parse(r["Total"].ToString());
+            p.Total = r["Total"].ToString();
             p.Tienda = r["Tienda"].ToString();
             p.Almacen = r["Almacen"].ToString();
             p.Motivo = r["Motivo"].ToString();
             p.Medio = r["Medio"].ToString();
             p.Documento = r["Documento"].ToString();
+
+            return p;
+        }
+
+        public static Select.Pedido_Sistema pedido_sistema_parse(DataRow r)
+        {
+            Select.Pedido_Sistema p = new Select.Pedido_Sistema();
+            p.IdPedido = Int32.Parse(r["idPedido"].ToString());
+            p.Documento = r["documento"].ToString();
+            p.Cliente = r["cliente"].ToString();
+            p.Direccion = r["direccion"].ToString();
+            p.FechaEntrega = DateTime.ParseExact(r["fechaEntrega"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.FechaPago = DateTime.ParseExact(r["fechaPago"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Estado = r["estadoPedido"].ToString();
+            p.Medio = r["medioPago"].ToString();
+            p.Tarjeta = r["tipoTarjeta"].ToString();
+            p.Moneda = r["moneda"].ToString();
+            p.Total = Double.Parse(r["total"].ToString());
+            p.CuantoPaga = Double.Parse(r["cuantoPaga"].ToString());
+            p.Vuelto = Double.Parse(r["vuelto"].ToString());
+            p.Motivo = r["motivoCancelacion"].ToString();
+            p.Usuario = r["usuario"].ToString();
+            p.Almacen = r["almacen"].ToString();
+            p.Tienda = r["tienda"].ToString();
 
             return p;
         }
@@ -480,6 +612,20 @@ namespace BARABARES_Services.AppCode
             d.IdProducto = Int32.Parse(r["idProducto"].ToString());
             d.IdPromocion = Int32.Parse(r["idPromcion"].ToString());
             d.IdPedido = Int32.Parse(r["idPedido"].ToString());
+
+            return d;
+        }
+
+        public static Select.DetallePedido_Sistema detallePedido_sistema_parse(DataRow r)
+        {
+            Select.DetallePedido_Sistema d = new Select.DetallePedido_Sistema();
+            d.IdDetallePedido = Int32.Parse(r["idDetallePedido"].ToString());
+            d.Nombre = r["nombre"].ToString();
+            d.Descripcion = r["descripcion"].ToString();
+            d.Presentacion = r["presentacion"].ToString();
+            d.PrecioUnitario = r["precioUnitario"].ToString();
+            d.Cantidad = Int32.Parse(r["cantidad"].ToString());
+            d.Subtotal = r["subtotal"].ToString();
 
             return d;
         }
@@ -526,6 +672,19 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.Perfil_Usuario perfil_usuario_parse(DataRow r)
+        {
+            Select.Perfil_Usuario p = new Select.Perfil_Usuario();
+            p.IdPerfil = Int32.Parse(r["idPerfil"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.UltimaModificacion = DateTime.ParseExact(r["ultimaModificacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.FechaAsignacion = DateTime.ParseExact(r["fechaAsignacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+
+            return p;
+        }
+
         public static PerfilXUsuario perfilXUsuario_parse(DataRow r)
         {
             PerfilXUsuario pxu = new PerfilXUsuario();
@@ -560,6 +719,7 @@ namespace BARABARES_Services.AppCode
             p.IdDireccion = Int32.Parse(r["idDireccion"].ToString());
             p.Activo = Boolean.Parse(r["activo"].ToString());
             p.IdUsuario = Int32.Parse(r["idUsuario"].ToString());
+            p.Imagen = r["imagen"].ToString();
 
             return p;
         }
@@ -583,11 +743,12 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
-        public static Select.DetallePersona persona_sistema_parse(DataRow r)
+        public static Select.Persona_Sistema persona_sistema_parse(DataRow r)
         {
 
-            Select.DetallePersona p = new Select.DetallePersona();
+            Select.Persona_Sistema p = new Select.Persona_Sistema();
             p.IdPersona = Int32.Parse(r["idPersona"].ToString());
+            p.IdTipoPersona = Int32.Parse(r["tipoPersona"].ToString());
             p.Nombres = r["nombres"].ToString();
             p.TipoDocumento = r["tipoDocumento"].ToString();
             p.NumeroDocumento = Int32.Parse(r["numeroDocumento"].ToString());
@@ -609,6 +770,7 @@ namespace BARABARES_Services.AppCode
             p.Departamento = r["departamento"].ToString();
             p.Provincia = r["provincia"].ToString();
             p.Distrito = r["distrito"].ToString();
+            p.Imagen = r["imagen"].ToString();
 
             return p;
         }
@@ -664,6 +826,45 @@ namespace BARABARES_Services.AppCode
             return p;
         }
 
+        public static Select.Producto_Sistema producto_sistema_parse(DataRow r)
+        {
+
+            Select.Producto_Sistema p = new Select.Producto_Sistema();
+            p.IdProducto = Int32.Parse(r["idProducto"].ToString());
+            p.IdTipoProducto = Int32.Parse(r["tipoProducto"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.Unidad = r["unidad"].ToString();
+            p.Presentacion = Int32.Parse(r["presentacion"].ToString());
+            p.Moneda = r["moneda"].ToString();
+            p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.Perecible = Boolean.Parse(r["perecible"].ToString());
+            p.Observaciones = r["observaciones"].ToString();
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.UltimaModificacion = DateTime.ParseExact(r["ultimaModificacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Imagen = r["imagen"].ToString();
+
+            return p;
+        }
+
+        public static Select.DetalleProducto_Web detalleproducto_web_parse(DataRow r)
+        {
+
+            Select.DetalleProducto_Web p = new Select.DetalleProducto_Web();
+            p.IdProducto = Int32.Parse(r["idProducto"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.Unidad = r["unidad"].ToString();
+            p.Presentacion = Int32.Parse(r["presentacion"].ToString());
+            p.Moneda = r["moneda"].ToString();
+            p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
+            p.Observaciones = r["observaciones"].ToString();
+            p.Imagen = r["imagen"].ToString();
+
+            return p;
+        }
+
         public static Select.Producto select_producto_parse(DataRow r)
         {
 
@@ -683,6 +884,7 @@ namespace BARABARES_Services.AppCode
         public static Select.Producto_Web producto_web_parse(DataRow r)
         {
             Select.Producto_Web p = new Select.Producto_Web();
+            p.IdProducto = Int32.Parse(r["idProducto"].ToString());
             p.Nombre = r["nombre"].ToString();
             p.Imagen = r["imagen"].ToString();
             p.Descripcion = r["presentacion"].ToString() + " " + r["unidad"].ToString();
@@ -756,6 +958,24 @@ namespace BARABARES_Services.AppCode
             p.Imagen = r["imagen"].ToString();
             p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
             p.Semana = Boolean.Parse(r["semana"].ToString());
+            p.Observaciones = r["observaciones"].ToString();
+
+            return p;
+        }
+
+        public static Select.Promocion_Sistema promocion_sistema_parse(DataRow r)
+        {
+            Select.Promocion_Sistema p = new Select.Promocion_Sistema();
+            p.IdPromocion = Int32.Parse(r["idPromocion"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.FechaInicio = DateTime.ParseExact(r["fechaInicio"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.FechaFin = DateTime.ParseExact(r["fechaFin"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Imagen = r["imagen"].ToString();
+            p.PrecioUnitario = Double.Parse(r["precioUnitario"].ToString());
+            p.Semana = Boolean.Parse(r["semana"].ToString());
+            p.Moneda = r["moneda"].ToString();
+            p.Observaciones = r["observaciones"].ToString();
 
             return p;
         }
@@ -786,6 +1006,21 @@ namespace BARABARES_Services.AppCode
             return d;
         }
 
+        public static Select.DetallePromocion_Sistema detallePromocion_sistema_parse(DataRow r)
+        {
+            Select.DetallePromocion_Sistema p = new Select.DetallePromocion_Sistema();
+            p.IdDetallePromocion = Int32.Parse(r["idDetallePromocion"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.Presentacion = r["presentacion"].ToString();
+            p.PrecioUnitario = r["precioUnitario"].ToString();
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.Perecible = Boolean.Parse(r["perecible"].ToString());
+            p.Cantidad = Int32.Parse(r["cantidad"].ToString());
+
+            return p;
+        }
+
         public static Select.Promocion_Web promocion_web_parse(DataRow r)
         {
             Select.Promocion_Web p = new Select.Promocion_Web();
@@ -806,6 +1041,7 @@ namespace BARABARES_Services.AppCode
             d.Cantidad = Int32.Parse(r["cantidad"].ToString());
             d.Presentacion = Int32.Parse(r["presentacion"].ToString());
             d.Unidad = r["unidad"].ToString();
+            d.PrecioUnitario = Int32.Parse(r["precioUnitario"].ToString());
 
             return d;
         }
@@ -839,6 +1075,20 @@ namespace BARABARES_Services.AppCode
             rol.Descripcion = r["descripcion"].ToString();
 
             return rol;
+        }
+
+        public static Select.Rol_Perfil rol_perfil_parse(DataRow r)
+        {
+            Select.Rol_Perfil p = new Select.Rol_Perfil();
+            p.IdRol = Int32.Parse(r["idRol"].ToString());
+            p.Accion = r["accion"].ToString();
+            p.Descripcion = r["descripcion"].ToString();
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.UltimaModificacion = DateTime.ParseExact(r["ultimaModificacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.FechaAsignacion = DateTime.ParseExact(r["fechaAsignacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+
+            return p;
         }
 
         public static RolXPerfil rolXPerfil_parse(DataRow r)
@@ -882,9 +1132,59 @@ namespace BARABARES_Services.AppCode
             return t;
         }
 
-        #endregion
+        public static Select.Tienda_Sistema tienda_sistema_parse(DataRow r)
+        {
+
+            Select.Tienda_Sistema p = new Select.Tienda_Sistema();
+            p.IdTienda = Int32.Parse(r["idTienda"].ToString());
+            p.Nombre = r["nombre"].ToString();
+            p.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            p.Activo = Boolean.Parse(r["activo"].ToString());
+            p.TipoCalle = r["tipoCalle"].ToString();
+            p.Calle = r["calle"].ToString();
+            p.Numero = Int32.Parse(r["numero"].ToString());
+            p.Interior = r["interior"].ToString();
+            p.TipoUrb = r["tipoUrb"].ToString();
+            p.Urbanizacion = r["urbanizacion"].ToString();
+            p.Mzlt = r["mzlt"].ToString();
+            p.Referencia = r["referencia"].ToString();
+            p.Departamento = r["departamento"].ToString();
+            p.Provincia = r["provincia"].ToString();
+            p.Distrito = r["distrito"].ToString();
+
+            return p;
+        }
+
+        #endregion  
 
         #region Usuario
+
+        public static ProductoInventario usuario_inventario_parse(DataRow r)
+        {
+            ProductoInventario producto = new ProductoInventario();
+
+            producto.idProducto = Int32.Parse(r["idProducto"].ToString());
+            producto.nombre = r["nombre"].ToString();
+            producto.stock = Int32.Parse(r["stock"].ToString());
+
+            return producto;
+        }
+
+        public static UsuarioPersonalInfo usuario_information_parse(DataRow r)
+        {
+            UsuarioPersonalInfo usuarioInfo = new UsuarioPersonalInfo();
+
+            usuarioInfo.Nombres = r["nombres"].ToString();
+            usuarioInfo.ApellidoPaterno = r["apellidoPaterno"].ToString();
+            usuarioInfo.ApellidoMaterno = r["apellidoMaterno"].ToString();
+            usuarioInfo.Tienda = r["tienda"].ToString();
+            usuarioInfo.DescripcionVehiculo = r["descripcionVehiculo"].ToString();
+            usuarioInfo.Placa = r["placa"].ToString();
+            usuarioInfo.Marca = Int32.Parse(r["marca"].ToString());
+            usuarioInfo.Modelo = Int32.Parse(r["modelo"].ToString());
+
+            return usuarioInfo;
+        }
 
         public static Usuario usuario_parse(DataRow r)
         {
@@ -896,6 +1196,19 @@ namespace BARABARES_Services.AppCode
             u.Activo = Boolean.Parse(r["activo"].ToString());
             u.IdContrasena = Int32.Parse(r["idContrasena"].ToString());
             u.IdTienda = Int32.Parse(r["idTienda"].ToString());
+
+            return u;
+        }
+
+        public static Select.Usuario_Sistema usuario_sistema_parse(DataRow r)
+        {
+            Select.Usuario_Sistema u = new Select.Usuario_Sistema();
+            u.IdUsuario = Int32.Parse(r["idUsuario"].ToString());
+            u.Nombre = r["nombre"].ToString();
+            u.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            u.UltimaModificacion = DateTime.ParseExact(r["ultimaModificacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            u.Activo = Boolean.Parse(r["activo"].ToString());
+            u.Tienda = r["tienda"].ToString();
 
             return u;
         }
@@ -1112,6 +1425,24 @@ namespace BARABARES_Services.AppCode
             v.Fecha = DateTime.ParseExact(r["Fecha"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
             v.Activo = Boolean.Parse(r["activo"].ToString());
             v.Tienda = r["Tienda"].ToString();
+
+            return v;
+        }
+
+        public static Select.Vehiculo_Sistema vehiculo_sistema_parse(DataRow r)
+        {
+            Select.Vehiculo_Sistema v = new Select.Vehiculo_Sistema();
+            v.IdVehiculo = Int32.Parse(r["idVehiculo"].ToString());
+            v.Descripcion = r["descripcion"].ToString();
+            v.Placa = r["placa"].ToString();
+            v.Marca = r["marca"].ToString();
+            v.Modelo = r["modelo"].ToString();
+            v.Capacidad = Int32.Parse(r["capacidad"].ToString());
+            v.FechaCreacion = DateTime.ParseExact(r["fechaCreacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            v.UltimaModificacion = DateTime.ParseExact(r["ultimaModificacion"].ToString(), "M/d/yyyy h:mm:ss ttt", null);
+            v.Activo = Boolean.Parse(r["activo"].ToString());
+            v.Tienda = r["tienda"].ToString();
+            v.Usuario = r["usuario"].ToString();
 
             return v;
         }

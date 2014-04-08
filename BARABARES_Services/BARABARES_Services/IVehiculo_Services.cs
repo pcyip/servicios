@@ -25,6 +25,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectById_Vehiculo")]
+        Select.Vehiculo_Sistema selectById_Vehiculo(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "combo_Vehiculo")]
         List<Vehiculo> combo_Vehiculo();
 

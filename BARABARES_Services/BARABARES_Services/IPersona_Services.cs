@@ -40,7 +40,7 @@ namespace BARABARES_Services
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectById_Persona")]
-        Select.DetallePersona selectById_Persona(int id);
+        Select.Persona_Sistema selectById_Persona(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

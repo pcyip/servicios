@@ -18,8 +18,22 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "usuario_Pedido")]
+        List<PedidoUsuario> usuario_Pedido(int idUsuario);
+         
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_Pedido")]
         List<Pedido> selectAll_Pedido();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectById_Pedido")]
+        Select.Pedido_Sistema selectById_Pedido(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -48,6 +62,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_DetallePedido")]
         List<DetallePedido> selectAll_DetallePedido();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectByPedido_DetallePedido")]
+        List<Select.DetallePedido_Sistema> selectByPedido_DetallePedido(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

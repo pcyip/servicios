@@ -25,6 +25,13 @@ namespace BARABARES_Services
         [WebInvoke(Method = "POST",
             BodyStyle = WebMessageBodyStyle.WrappedRequest,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectById_Comprobante")]
+        Select.ComprobantePago_Sistema selectById_Comprobante(int id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "list_Comprobante")]
         List<Select.ComprobantePago> list_Comprobante();
 
@@ -48,6 +55,13 @@ namespace BARABARES_Services
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "selectAll_DetalleComprobante")]
         List<DetalleComprobante> selectAll_DetalleComprobante();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "selectByComprobante_DetalleComprobante")]
+        List<Select.DetalleComprobante_Sistema> selectByComprobante_DetalleComprobante(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

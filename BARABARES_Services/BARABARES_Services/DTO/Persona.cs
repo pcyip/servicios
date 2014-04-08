@@ -22,5 +22,6 @@ namespace BARABARES_Services.DTO
         public int IdDireccion { get; set; }
         public bool Activo { get; set; }
         public int IdUsuario { get; set; }
+        public string Imagen { get; set; }
     }
 }
